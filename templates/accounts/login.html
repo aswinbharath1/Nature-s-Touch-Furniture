@@ -1,0 +1,44 @@
+{% extends "layout/base.html" %}
+{% block content %}
+<div class="container">
+  <div class="row">
+      <div class="col-md-12 mx-auto login-container">
+
+          <div class="login-form">
+              <h2 class="text-center mb-4">Login</h2>
+              <form method="POST">
+                  {% csrf_token %}
+                  {% if messages %}
+                      <div class="text-danger d-flex justify-content-center mt-2">
+                          {% for message in messages%}
+                          {{message}}
+                          {%endfor%}  
+                      </div>
+                  {% endif %}
+                  <div class="form-group">
+                      <label for="email"></label>
+                      <input type="email" class="form-control" id="email" placeholder="Email" name="email" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="password"></label>
+                      <input type="password" class="form-control" placeholder="password" id="password" name="password" required>
+                      <a href="{% url 'forgot_pass' %}" class="mt-4 text text-success">Forgot password?</a>
+
+                  </div>
+                  <div class="d-flex justify-content-center">
+                      <button type="submit" class="btn btn-primary  login-button">Login</button>
+                  </div>
+                  
+              </form>
+              <div class="d-flex justify-content-center">
+                  <p class="mt-4 text-success">Not registered? <a href="{% url 'user_signup'%}" class="text text-primary">Create an account</a></p>
+              </div>
+              <div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+{% endblock %}
