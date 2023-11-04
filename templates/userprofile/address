@@ -1,0 +1,17 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+    <h1>ADDRESS</h1>
+    {% for addres in address %}
+    <div class="address-box">
+        <p>Recipient Name: {{ address.recipient_name }}</p>
+        <p>House No: {{ addres.house_no }}</p>
+        <p>Street Name: {{ addres.street_name }}</p>
+        <p>Village/City: {{ addres.village_name }}</p>
+        <p>Postal Code: {{ addres.postal_code }}</p>
+        <p>District: {{ addres.district }}</p>
+        <p>State: {{ addres.state }}</p>
+        <p>Country: {{ addess.country }}</p>
+    </div>
+    {% endfor %}
+{% endblock %}

@@ -16,8 +16,8 @@ urlpatterns = [
        path('delete_categories/<int:category_id>/',views.DeleteCategories,name='delete_categories'),
        path('sub_categories/',views.SubCategories,name='sub_categories'),
        path('add_subcategories/',views.AddSubCategories,name='add_subcategories'),
-       path('edit_subcategories/<int:subcategory_id>/',views.EditSubcategories,name='edit_subcategories'),
-       path('delete_subcategories/<int:subcategory_id>/',views.DeleteSubcategories,name='delete_subcategories'),
+       path('edit_subcategories/<int:subcategory_id>/',views.EditSubCategories,name='edit_subcategories'),
+       path('delete_subcategories/<int:subcategory_id>/',views.DeleteSubCategories,name='delete_subcategories'),
 
 
 ]

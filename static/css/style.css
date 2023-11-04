@@ -398,7 +398,7 @@ a {
     -o-transition: .3s all ease;
     transition: .3s all ease; }
     .popular-product .product-item-sm a:hover {
-      color: rgba(47, 47, 47, 0.5); }
+      color: rgba(102, 100, 100, 0.5); }
   .popular-product .product-item-sm p {
     line-height: 1.4;
     margin-bottom: 10px;

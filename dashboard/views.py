@@ -135,99 +135,90 @@ def DeleteCategories(request,category_id):
     else:
         category.is_activate=True
         category.save()
-        # categories=Category.objects.all
-
         category=Category.objects.all().order_by('id')
         context={
             'categories':category
         }
-        return render(request,'dashboard/categories.html',context)
+        return render(request,'dashboard/category.html',context)
     
 
+# View for displaying subcategories
 def SubCategories(request):
-    category=Category.objects.filter(is_activate=True)
-    subcategory=Sub_Category.objects.all().order_by('id')
-    context={
-        'subcategories':subcategory,
-        'categories':category
+    # Fetch active categories from the database
+    category = Category.objects.filter(is_activate=True)
+    # Fetch all subcategories and order them by their ID
+    subcategory = Sub_Category.objects.all().order_by('id')
+    context = {
+        'subcategories': subcategory,
+        'categories': category
     }
+    return render(request, 'dashboard/subcategories.html', context)
 
-    return render(request,'dashboard/subcategories.html',context)
- 
+# View for adding subcategories
 def AddSubCategories(request):
-    if request.method=="POST":
-        # setting value as category_name as category id and fetching it 
-        category_id=request.POST.get('category_name')
-        # using category id update the category field of sub_category by passing the particular category instance
+    if request.method == "POST":
+        # Get the selected category's ID from the form
+        category_id = request.POST.get('category_name')
+        # Retrieve the selected category instance
         category_instance = Category.objects.get(pk=category_id)
-        sub_category_name=request.POST.get('categoryName')
+        sub_category_name = request.POST.get('categoryName')
         description = request.POST.get('categoryDescription')
         cat_image = request.FILES.get('cat_img')
-        cat = Sub_Category(category=category_instance, sub_category_name=sub_category_name, sub_category_description=description,
-                           sub_Category_image=cat_image)
-        cat.save()   
+        cat = Sub_Category(
+            category=category_instance,
+            sub_category_name=sub_category_name,
+            sub_category_description=description,
+            sub_Category_image=cat_image
+        )
+        cat.save()
         return redirect('sub_categories')
 
-def EditSubcategories(request,subcategory_id):
+# View for editing subcategories
+def EditSubCategories(request, subcategory_id):
+    subcategory = Sub_Category.objects.get(pk=subcategory_id)
+    # Fetch the image from the database for when the user hasn't edited the image field
+    sub_category_image = subcategory.sub_Category_image
 
-    subcategory=Sub_Category.objects.get(pk=subcategory_id)
-    # fetching the image from data base for when user is not edited the image field we will have to give the previous image  
-    sub_category_image=subcategory.sub_Category_image
-
-    if request.method=="POST":
-        # setting value as category_name as category id and fetching it 
+    if request.method == "POST":
+        # Get the selected category's ID from the form
         category_id = request.POST.get('category_name')
-        # using category id update the category field of sub_category
+        # Update the category field of the subcategory using the selected category ID
         subcategory.category = Category.objects.get(pk=category_id)
         sub_category_name = request.POST.get('categoryName')
-        subcategory.sub_category_name =  sub_category_name
+        subcategory.sub_category_name = sub_category_name
         subcategory.sub_category_description = request.POST.get('categoryDescription')
 
         sub_Category_img = request.FILES.get('cat_img')
-        # checking if the subcategory image is none 
+        # Check if the subcategory image is None
         if sub_Category_img is None:
             subcategory.sub_Category_image = sub_category_image
         else:
-            subcategory.sub_Category_image = sub_Category_img      
+            subcategory.sub_Category_image = sub_Category_img
 
-
+        # Check if the new subcategory name is already taken
         if Sub_Category.objects.filter(sub_category_name=sub_category_name).exclude(id=subcategory_id).exists():
-
-            messages.error(request,"Entered Sub Category is already taken!!")
+            messages.error(request, "Entered Sub Category is already taken!!")
             return redirect('sub_categories')
-        
         else:
-
-            subcategory.save()   
+            subcategory.save()
             return redirect('sub_categories')
-            
-def DeleteSubcategories(request,subcategory_id):
 
-    category=Sub_Category.objects.get(pk=subcategory_id)
+# View for activating or deactivating subcategories
+def DeleteSubCategories(request, subcategory_id):
+    category = Sub_Category.objects.get(pk=subcategory_id)
 
     if category.is_activate:
-        category.is_activate=False
-        category.save()
-
-       
-        
-        category=Category.objects.filter(is_activate=True).order_by('id')
-        subcategory=Sub_Category.objects.all().order_by('id')
-        context={
-            'subcategories':subcategory,
-            'categories':category
-        }
-
-        return render(request,'dashboard/subcategories.html',context)
+        category.is_activate = False
     else:
-        category.is_activate=True
-        category.save()
-        
+        category.is_activate = True
 
-        category=Category.objects.filter(is_activate=True).order_by('id')
-        subcategory=Sub_Category.objects.all().order_by('id')
-        context={
-            'subcategories':subcategory,
-            'categories':category
-         }
-    return render(request,'dashboard/subcategories.html',context)
+    category.save()
+
+    # Fetch active categories and all subcategories, ordering them by ID
+    categories = Category.objects.filter(is_activate=True).order_by('id')
+    subcategories = Sub_Category.objects.all().order_by('id')
+    context = {
+        'subcategories': subcategories,
+        'categories': categories
+    }
+    return render(request, 'dashboard/subcategories.html', context)

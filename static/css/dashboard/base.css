@@ -31,7 +31,7 @@
     background-color: #0b396b;
 }
 .table-rows:hover {
-  background-color: rgb(4, 27, 19);
+  background-color: rgb(88, 88, 88);
 }
   /* Media query for screens with a max-width of 412px */
   @media (min-width: 280px ) and (max-width: 767px) {

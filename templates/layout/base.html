@@ -36,9 +36,9 @@
 							<a class="nav-link" href="{% url "home" %}">Home</a>
 						</li>
 						<li><a class="nav-link" href="{% url "shop_page" %}">Shop</a></li>
-						<li><a class="nav-link" href="about.html">About us</a></li>
-						<li><a class="nav-link" href="services.html">Services</a></li>
-						<li><a class="nav-link" href="contact.html">Contact us</a></li>
+						<li><a class="nav-link" href="#">About us</a></li>
+						<li><a class="nav-link" href="#">Services</a></li>
+						<li><a class="nav-link" href="#">Contact us</a></li>
 						{% if user.is_authenticated %}
 							<li><a class="nav-link" href="{% url "user_logout" %}">Logout</a></li>
 						{% else %}
@@ -48,8 +48,8 @@
 
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
                         
-						<li><a class="nav-link" href="#"><img src="{% static "images/user.svg" %}"></a></li>
-						<li><a class="nav-link" href="cart.html"><img src="{% static "images/cart.svg" %}"></a></li>
+						<li><a class="nav-link" href="{% url "user_profile" %}"><img src="{% static "images/user.svg" %}"></a></li>
+						<li><a class="nav-link" href=" {% url "cart_page" %}"><img src="{% static "images/cart.svg" %}"></a></li>
 					</ul>
 				</div>
 			</div>

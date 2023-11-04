@@ -158,7 +158,7 @@ def OtpResend(request):
     phone = request.session['phoneno']
     password= request.session['password']
 
-    subject = 'Verify your email to Create an account '
+    subject =  " Verify your email to Create an account at Nature's Touch furniture " 
     message = otp
     from_email= settings.EMAIL_HOST_USER
     recipient_list = [user_email]

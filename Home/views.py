@@ -4,7 +4,7 @@ from django.db.models import Q
 from categories.models import Category
 from categories.models import Sub_Category
 from accounts.models import CustomUser
-from store.models import Product
+from store.models import Product, Variation
 
 # Create your views here.
 
@@ -17,10 +17,12 @@ def Home(request):
 
 def ViewShop(request):
     categories=Category.objects.filter(is_activate=True)
-    products=Product.objects.filter(is_activate=True)
+    # products=Product.objects.filter(is_activate=True)
+    variants = Variation.objects.order_by('product').distinct('product')
+
     context={
         'category':categories,
-        'product':products,
+        'variants':variants
     }
 
 
@@ -45,14 +47,14 @@ def DisplayProducts(request,sub_category_id):
             
             }                            
 
-    return render(request,'products_display.html',context)       
+    return render(request,'product_display.html',context)       
 
-def ProductDetails(request,product_id):
-
-    product=Product.objects.filter(Q(is_activate=True) & Q(id=product_id))
+def ProductDetails(request,variant_id):
+    print(variant_id)
+    variants=Variation.objects.get( id=variant_id )
 
     context={
-        'product':product
+        'variant':variants
     }
 
     return render(request,'product_details.html',context)
