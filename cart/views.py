@@ -177,11 +177,7 @@ def CheckoutPage(request):
             }
         
             return render(request,'cart/checkout.html',context)
-    #     else:
-    #         return redirect('cart_page')
-    # else:
-    #     return redirect('user_login')
-
+    
 def AddressCheckout(request):
     if 'useremail' in request.session:
         email=request.session['useremail']

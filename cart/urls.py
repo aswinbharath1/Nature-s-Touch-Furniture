@@ -5,7 +5,7 @@ from . import views
 
 urlpatterns = [
     
-      
+       
        path('',views.CartPage,name='cart_page'),
        path('add-cart/<int:variant_id>/',views.AddCart,name='add_cart'),
        path('decrement-cart/<int:product_id>/',views.DecrementCartitem,name="decrement_cartitem"),
