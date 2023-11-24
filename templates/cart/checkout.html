@@ -59,24 +59,39 @@
             </table>
 
             <div>
-                 <button type="submit" class="btn btn-secondary">
+                 <button type="submit" class="btn btn-primary">
                     Cash on delivery
                     </button>
+                    <button class="btn btn-secondary paywithRazorpay">
+                        Pay With RazorPay
+                    </button>
+            {% if grand_total < wallet %} 
+                
+                    <button class="mt-2 text-light paywithwallet" padding:10px;">
+                        Pay With Wallet
+                    </button>
+                
+            {% endif %}
+                    
+                    
             </div>
+            
 
-            <div>
-                <button class="mt-2 btn btn-danger paywithRazorpay">
-                    Pay With RazorPay
-                </button>
-            </div>
+            
         </div>
     </div>
 </form>
 
 {%endblock content%}
+{% block script %}
 
-{% block script%}
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
 
 {% endblock script %}

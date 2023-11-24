@@ -19,6 +19,39 @@
 	</div>
 </div>
 <!-- End Hero Section -->
+<div class="mt-5 main col-lg-12" id="main" style="">
+    {% if coupons %}
+    <div class="d-flex justify-content-center">
+        <label for="myDropdown" style="color:#000; font-weight:700;">
+            <h2>Coupons available for you</h2>
+        </label>
+    </div>
+
+    {% for coupon in coupons%}
+    <div class=" text-dark col-lg-3 px-5 mx-5"
+        style="background-color: #d8cbbe; border:10px solid #f4f4f4;border-radius:10%;">
+        <h6 style="font-weight:bolder;color:rgb(1, 57, 27)">coupon-{{ forloop.counter }}</h6>
+        <h5 class=""> Coupon Name: {{ coupon.coupon_name }}</h5>
+
+        <h6 class="col-lg-6 mt-3">Coupon Code:</h6>
+        <input class="col-lg-6 mt-1" type="text" id="Code" value="{{ coupon.code }}">
+
+
+        <button type="button" onclick="copyText()" style="background-color: #09f4b1;">Copy</button>
+        <h6 class="mt-3" style="color: #0055ff;">"Enjoy a discount of Rs.{{ coupon.discount }} on your next purchase!"
+        </h6>
+        <p class="text-danger mt-3 pb-3">nb: This coupon is only available from {{ coupon.valid_from }} &nbspto&nbsp {{
+            coupon.valid_to }}</p>
+    </div>
+
+    {% endfor %}
+    {% else %}
+    <div class="d-flex justify-content-center mt-3 mb-3">
+        <label style="color:#000; font-weight:700;">There are no coupons available for you right now</label>
+    </div>
+    {% endif %}
+</div>
+
 
 
 
@@ -148,7 +181,7 @@
 							<div class="col-md-12">
 								<a href="{% url 'address_checkout'%}">
 									<button class="btn btn-secondary btn-lg py-3 btn-block"
-									onclick="window.location='checkout.html'">Proceed To Checkout</button>
+									onclick="window.location='checkout.html' ">Proceed To Checkout</button>
 								</a>
 							
 							</div>

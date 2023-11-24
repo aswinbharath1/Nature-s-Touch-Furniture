@@ -75,6 +75,7 @@ def DeleteProduct(request,product_id):
         }
         return render(request,'dashboard/product.html',context)
      
+    
      else:
         product.is_activate=True
         product.save()

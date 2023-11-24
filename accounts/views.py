@@ -7,7 +7,6 @@ from django.contrib import messages
 from .models import CustomUser, CustomUserManager
 import pyotp
 from .utils import send_otp
-
 from django.conf import settings
 from django.core.mail import send_mail
 from datetime import datetime
@@ -69,6 +68,7 @@ def UserSignup(request):
             otp=send_otp(request)
             subject= 'Verify your email to continue to create an account '
             message=otp
+            print(otp)
             from_email= settings.EMAIL_HOST_USER
             recipient_list = [user_email]
 
@@ -104,6 +104,7 @@ def UserLogout(request):
 def OtpVerification(request):
     if request.method=='POST':
         otp=request.POST.get('otp')
+        print(otp)
 
         user_email = request.session['useremail']
         username=request.session['username']
@@ -186,8 +187,7 @@ def OtpResend(request):
                 del request.session[ ' otp_secret_key ' ]
                 del request.session[ ' otp_valid_date ' ]
 
-
-                return redirect( ' user_login ' )
+                return redirect( 'user_login' )
     
     
     return render(request , 'accouts/verify.html')
