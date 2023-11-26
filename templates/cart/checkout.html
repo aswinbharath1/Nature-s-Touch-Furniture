@@ -2,6 +2,30 @@
 
 
 {% block content %}
+<style>
+    .coupon-container {
+        max-width: 800px; /* Adjust as needed */
+        margin: 0 auto;
+    }
+    
+    .coupon-card {
+        max-width: 200px; /* Adjust as needed */
+    }
+    
+    .coupon-code {
+        width: 100%;
+    }
+    
+    .alert {
+        margin-top: 0.5rem;
+    }
+    
+
+</style>
+
+
+
+
 <!-- Start Hero Section -->
 <div class="hero">
     <div class="container">
@@ -14,6 +38,41 @@
         </div>
     </div>
 </div>
+<div class="coupon-container mt-5">
+    {% if coupons %}
+        <div class="d-flex justify-content-center">
+            <label for="myDropdown" style="color: #000; font-weight: 700;">
+                <h2>Coupons available for you</h2>
+            </label>
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-center">
+            {% for coupon in coupons %}
+                <div class="coupon-card mx-3 my-3">
+                    <h6 style="font-weight: bolder; color: rgb(1, 57, 27)">Coupon-{{ forloop.counter }}</h6>
+                    <div class="text-dark px-3 mb-3" style="background-color: #cccbcb; border: 3px solid rgb(106, 106, 106); border-radius: 5%;">
+                        <h5 class=""> Coupon Name: {{ coupon.coupon_name }}</h5>
+                        <h6 class="mt-2">Coupon Code:</h6>
+                        <div class="d-flex align-items-center">
+                            <input class="coupon-code" type="text" value="{{ coupon.code }}">
+                            <button type="button" onclick="copyText(this)">Copy</button>
+                            <div class="alert alert-success ml-2" role="alert" style="display: none;">Coupon code copied!</div>
+                        </div>
+                        <p class="mt-2" style="color: #04090a;">Enjoy a discount of Rs.{{ coupon.discount }} on your purchase!</p>
+                        <p class="text-danger mb-3">Valid from {{ coupon.valid_from }} to {{ coupon.valid_to }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="d-flex justify-content-center mt-3 mb-3">
+            <label style="color: #000; font-weight: 700;">There are no coupons available for you right now</label>
+        </div>
+    {% endif %}
+</div>
+
+
+
 <form method="POST" action="{% url 'place_order' %}">
     {% csrf_token %}
     <div class="container">
@@ -30,6 +89,22 @@
                 </p>
             </div>
             <input type="hidden" name="selected_address" value="{{ address.id }}">
+        </div>
+
+        <div class="col-lg-4 d-flex justify-content-end">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p class="text-info">Enter your coupon code</p>
+                </div>
+                <div class=" mb-3 col-lg-6">
+                    <input type="text" class="form-control py-3" id="coupon" placeholder="Coupon Code">
+                </div>
+                <div class="col-lg-4 mb-5">
+                    <button type="button" id="ApplyCoupon" class="btn-success"
+                        style="border-radius:0%; height:45px; border: 1px solid #346d44;">Apply
+                        coupon</button>
+                </div>
+            </div>
         </div>
         <div class="p-3 p-lg-5 border bg-white">
             <table class="table site-block-order-table mb-5">
@@ -66,11 +141,15 @@
                         Pay With RazorPay
                     </button>
             {% if grand_total < wallet %} 
+                    <div>
+                        <button class="mt-2 text-light paywithwallet"
+                            style="background-color:#094cf4;border-radius:20px; width:300px; height:50px; border: 2px solid #f4f4f4; padding:10px;">
+                            Pay With Wallet
+                        </button>
+                    </div>
+                <!-- {%else%} -->
                 
-                    <button class="mt-2 text-light paywithwallet" padding:10px;">
-                        Pay With Wallet
-                    </button>
-                
+                <!-- <input type="checkbox" placeholder="apply wallet"> -->
             {% endif %}
                     
                     
@@ -84,6 +163,112 @@
 
 {%endblock content%}
 {% block script %}
+<script>
+    function copyText(button) {
+     // Find the input element related to the clicked button
+     var couponCodeInput = button.parentElement.querySelector('.coupon-code');
+ 
+     // Select the text inside the input
+     couponCodeInput.select();
+     couponCodeInput.setSelectionRange(0, 99999); // For mobile devices
+ 
+     // Copy the text to clipboard
+     document.execCommand('copy');
+ 
+     // Optionally, provide some feedback to the user
+     //alert('Copied the coupon code: ' + couponCodeInput.value);
+     // Show the alert message when the code is copied
+     var alertMessage = button.parentElement.querySelector('.alert');
+     alertMessage.style.display = 'block';
+ 
+     // Hide the alert after a certain time (e.g., 3 seconds)
+     setTimeout(function() {
+         alertMessage.style.display = 'none';
+     }, 3000);
+ }
+ 
+ </script>
+ <script>
+     document.getElementById('ApplyCoupon').addEventListener('click', function () {
+         var coupon_code = document.getElementById('coupon').value;
+         var grand_total = document.getElementById('grand_total').value;
+         var token = $("[name='csrfmiddlewaretoken']").val();
+         var dataToSend = {
+             key1: coupon_code,
+             key2: grand_total,
+             csrfmiddlewaretoken: token,
+         };
+         console.log("..................................")
+ 
+         $.ajax({
+             url: '/cart/apply-coupon/',
+             method: 'POST',
+             data: dataToSend,
+             success: function (response) {
+                 // Handle the response from the server
+                 console.log(response.total);
+                 document.getElementById('total_value').innerText = "₹" + " " + response.total;
+ 
+                 document.getElementById('grand_total').innerText = response.total;
+             },
+             error: function (error) {
+                 // Handle errors
+                 console.error('Error:', error);
+             }
+         });
+     });
+ </script>
+ <script>
+     $(document).ready(function () {
+ 
+         $('.paywithwallet').click(function (e) {
+             e.preventDefault();
+             console.log("Clicked the wallet buttonn");
+             var address_id = $("[name='selected_address']").val();
+             var token = $("[name='csrfmiddlewaretoken']").val();
+     
+             data = {
+                 'selected_address': address_id,
+                 'payment_mode': 'wallet',
+                 'payment_id': '',
+                 csrfmiddlewaretoken: token,
+     
+             };
+             $.ajax({
+                 url: '/cart/place-order/',
+                 method: 'POST',
+                 data: data,
+                 
+                 success: function (responseData) {
+                 console.log(responseData);
+                     swal({
+                         title: "Congratulations!",
+                         text: "Your order has been placed successfully",
+                         icon: "success",
+                         buttons: true,
+                         dangerMode: true,
+                     }).then((willDelete) => {
+                         if (willDelete) {
+                         console.log('...........');
+                             window.location.href = '/cart/order-success/'
+                         } else {
+                             swal("Your imaginary file is safe!");
+                         }
+                     });
+                 },
+                 error: function (error) {
+                     // Callback function to handle errors
+                     console.error('Error:', error);
+                 }
+             });
+     
+     
+     
+         });
+ 
+     });
+ </script>
+
 
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

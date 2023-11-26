@@ -6,6 +6,7 @@ from categories.models import Sub_Category
 from accounts.models import CustomUser
 from store.models import Product, Variation
 from dashboard.models import Banner
+from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
 
@@ -23,8 +24,9 @@ def Home(request):
 def ViewShop(request):
     categories=Category.objects.filter(is_activate=True)
     products=Product.objects.filter(is_activate=True)
-    variants = Variation.objects.order_by('product').distinct('product')
-    
+    variants = Variation.objects.filter(is_available=True).order_by('product').distinct('product')
+
+
     available_colors = Variation.objects.filter(is_available=True).values('color').distinct()
     context={
         'category':categories,
@@ -33,15 +35,13 @@ def ViewShop(request):
         "color":available_colors,
     }
 
-
-
     return render(request,'shop.html',context)
 
 def ViewSubcategory(request,category_id):
     variants={}
     subcategory=Sub_Category.objects.filter(Q(is_activate=True) & Q(category=category_id))
     # Assuming you already have 'subcategory' containing the filtered subcategories
-    variants = Variation.objects.filter(product__sub_category__in=subcategory)
+    variants = Variation.objects.filter(product__sub_category__in=subcategory,is_available=True)
 
 
     context={
@@ -53,26 +53,24 @@ def ViewSubcategory(request,category_id):
 
 def DisplayProducts(request,sub_category_id):
     
-    product = Product.objects.filter(Q(is_activate=True) & Q(sub_category = sub_category_id))
-    # subcategory=Sub_Category.objects.filter(Q(is_activate=True) & Q(category=category_id))
-    variants = Variation.objects.filter(product__sub_category__in=subcategory)    
-    
-
+    subcategory = Sub_Category.objects.get(id=sub_category_id)
+    variants = Variation.objects.filter(product__sub_category=subcategory,is_available=True)
     context={
         'variants':variants
-            
-            }                            
+    }                            
 
-    return render(request,'products_display.html',context)
+    return render(request,'product_display.html',context)
 
 def ProductDetails(request,variant_id):
 
     variants = Variation.objects.get(pk=variant_id)
     product_id = variants.product
 
-    available_variants =Variation.objects.filter(product=product_id)
+    available_variants =Variation.objects.filter(product=product_id,is_available=True)
 
-    
+    for i in available_variants:
+
+        print(i.color)
     context={
         # 'product':product,
         'variant': variants,
@@ -86,52 +84,60 @@ def VariantSelect(request,variant_id):
     variants = Variation.objects.get(pk=variant_id)
     product_id = variants.product
 
-    available_variants =Variation.objects.filter(product=product_id)
-    
-    variant_price = variants.selling_price
-    variant_stock = variants.stock
-    variant_image1 = variants.image1.url
-    variant_image2 = variants.image2.url
-    variant_image3 = variants.image3.url
-    variant_image4 = variants.image4.url
-
-        # 'available_vatiants':available_variants
-    
-
-    return JsonResponse({'variant':variant_price,
-                         'variant_stock':variant_stock,
-                         'variant_image1':variant_image1,
-                         'variant_image2':variant_image2,
-                         'variant_image3':variant_image3,
-                         'variant_image4':variant_image4
-                         })
+    return render(request,'product_details.html',variant_id)
 
 
 def ProductSearch(request):
 
-    query=request.GET.get('q')
-    modified_string = query.replace(" ", "")
-    variants=None
-    
+    query = request.GET.get('search')
+    color_filter = request.GET.get('color')
+    print(color_filter)
+    sort = request.GET.get('sort')
+    print(sort)
+
+    categories = Category.objects.filter(is_activate=True)
+    products = Product.objects.filter(is_activate=True)
+    available_colors = Variation.objects.filter(is_available=True).values('color').distinct()
+    variants = Variation.objects.filter(is_available=True)
+
+    if query:
+        variants = variants.filter(product__product_name__icontains=query)
+
+    if color_filter:
+        variants = variants.filter(color=color_filter)
+
+    if sort == '1':
+        variants = variants.order_by('-selling_price')
+    else:
+        variants = variants.order_by('selling_price')
+
+    context = {
+        'category': categories,
+        'product': products,
+        'variants': variants,
+        'color': available_colors,
+    }
+
+    return render(request, 'shop.html', context)
+
+
+def ProductSort(request):
+    sort=request.GET.get('sort')
     categories=Category.objects.filter(is_activate=True)
     products=Product.objects.filter(is_activate=True)
     available_colors = Variation.objects.filter(is_available=True).values('color').distinct()
-    if modified_string == "":
-        
-        return redirect('shop_page')
-    
+
+    if sort== '1':
+        variants=Variation.objects.filter(is_available=True).order_by('-selling_price')
+
     else:
+         variants=Variation.objects.filter(is_available=True).order_by('selling_price')
 
-        product=Product.objects.filter(product_name__icontains=query)
-        for product in product:
-            
-
-            variants=Variation.objects.filter(product=product)
-        print(variants)
-        context={
+    context={
         'category':categories,
         'product':products,
         'variants':variants,
         "color":available_colors,
     }
-        return render(request,'shop.html',context)
+
+    return render(request,'shop.html',context)

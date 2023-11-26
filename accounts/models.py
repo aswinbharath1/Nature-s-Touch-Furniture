@@ -42,7 +42,7 @@ class CustomUser(AbstractUser):
     phone = models.CharField(max_length=20,unique=False,verbose_name='phone number',blank=True,null=True, help_text='enter 10 digit phone number')
     username = models.CharField(max_length=20,unique=False,verbose_name='username',blank=True,null=True,)
    
-    #wallet  = models.PositiveIntegerField(default=0)
+    wallet  = models.PositiveIntegerField(default=0)
     groups = models.ManyToManyField(
         AuthGroup,
         verbose_name='groups',

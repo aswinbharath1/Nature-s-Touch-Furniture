@@ -1,0 +1,57 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% block bootstraplink %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+{% if flag == 0 %}
+<div class="d-flex justify-content-center">
+    <h3>No Results found</h3>
+</div>
+{% elif variants is None %}
+<div class="d-flex coloum justify-content-center">
+    <div class="mt-5 d-flex justify-content-center">
+        <img src="{% static '/images/no_result.png' %}" width="70%" style="border-radius:180px;">
+    </div>
+</div>
+<div class="d-flex justify-content-center mt-1">
+    <a href="{% url 'shop_page' %}">
+        <button class="btn">Back to shop</button>
+    </a>
+</div>
+
+{% else %}
+<div class="container">
+    <div class="row">
+        <!-- Start Column 1 -->
+        {% for variant in variants %}
+        <div class="col-12 col-md-4 col-lg-3 mb-5 mt-5">
+            <a class="product-item" href="{% url 'product_details' variant_id=variant.id %}">
+                <img src="/media/{{variant.image1}}" class="img-fluid product-thumbnail" width="60%" height="60%">
+                <h5 class="product-title mt-2">{{variant.product.product_name}}</h5>
+                <div class="d-flex justify-content-start">
+                    <strong class="product-price">Rs.{{variant.selling_price}}</strong>
+                </div>
+
+
+                <div class="d-flex justify-content-start mt-1 mb-5">
+                    <a href="{% url 'add_cart' product_id=variant.id %}">
+                        <button class="btn btn-sm button-addtocart">Add to Cart</button>
+                    </a>
+
+                    <button class="btn btn-primary btn-sm">Buy Now</button>
+
+                </div>
+
+
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+
+{% endblock %}

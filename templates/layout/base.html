@@ -34,15 +34,7 @@
             <li>
               <a class="nav-link" href="{% url 'shop_page' %}">Shop</a>
             </li>
-            <li>
-              <a class="nav-link" href="#">About us</a>
-            </li>
-            <li>
-              <a class="nav-link" href="#">Services</a>
-            </li>
-            <li>
-              <a class="nav-link" href="#">Contact us</a>
-            </li>
+            
             {% if user.is_authenticated %}
               <li>
                 <a class="nav-link" href="{% url 'user_logout' %}">Logout</a>

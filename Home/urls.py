@@ -10,5 +10,6 @@ urlpatterns = [
     path('product-details/<int:variant_id>/',views.ProductDetails,name="product_details"),
     path('variant_select/<int:variant_id>/',views.VariantSelect,name="variant_select"),
     path('product-search',views.ProductSearch,name="product_search"),
+    path('product-sort',views.ProductSort,name="product_sort")
 
 ]

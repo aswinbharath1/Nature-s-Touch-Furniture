@@ -8,44 +8,40 @@
 
 {% block content %}
 <div class="untree_co-section product-section before-footer-section">
-	<div class="container">
-		<div class="row">
-
-			<!-- Start Column 1 -->
-			{% for variant in variants %}
-			<div class="col-12 col-md-4 col-lg-3 mb-5">
-				<a class="product-item" href="{% url "product_details" variant_id=variant.id %}">
-					<img src="/media/{{variant.image1}}" class="img-fluid product-thumbnail">
-					<h3 class="product-title">{{variant.product.name}}</h3>
-					<strong class="product-price">Rs.{{variant.product.actual_price}}</strong>
-					<div class="d-flex justify-content-center"> 
-						<span class="icon-cross">
-						
-							<!-- <img src="{% static 'images/cross.svg'%}" class="img-fluid"> -->
-							<img src="{% static "images/icons8-love-16.png" %}" class="img-fluid">
-							
-							
-						</span>
-				</a>
-						<div class="d-flex justify-content-center mt-3">
-							
-							<a href="{% url "add_cart" variant_id=variant.id %}">
-								<button class="btn btn-sm button-addtocart">Add to Cart</button>
-							</a>
-						</div>
-						<div class="d-flex justify-content-center mt-3">
-							<button class="btn btn-primary btn-sm">Buy Now</button>
-						</div>
-					
-					</div>
-					
-				
-				
-			</div>
-            {% endfor%}
-		</div>
-	</div>
+    <div class="container">
+        <div class="row">
+            <!-- Start Column 1 -->
+            {% for variant in variants %}
+            <div class="col-lg-3 mb-5 mt-5">
+                <div class="mx-1">
+                    <div class="mx-2 mt-2 mb-2"
+                        style="background-color: white; border: 5px solid rgba(239, 239, 239, 0.968); border-radius: 0;">
+                        <a class="product-item" href="{% url 'product_details' variant_id=variant.id %}">
+                            <img src="/media/{{variant.image1}}" class="img-fluid product-thumbnail mt-4"
+                                width="60%" height="60%">
+                            <h3 class="product-title">{{variant.product.product_name}}</h3>
+                            <strong class="product-price"
+                                style="color: rgb(255, 0, 0);">Rs.{{variant.selling_price}}</strong>
+                            <div class="d-flex justify-content-center">
+                                <span class="icon-cross">
+                                    <img src="{% static 'images/icons8-love.png' %}" class="img-fluid">
+                                </span>
+                                <div class="d-flex coloum mt-2 mb-2">
+                                    <a href="{% url 'add_cart' product_id=variant.id %}">
+                                        <button class="btn button-addtocart">Add to Cart</button>
+                                    </a>
+                                    <button class="btn btn-primary">Buy Now</button>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
+
 
 
 {% endblock %}

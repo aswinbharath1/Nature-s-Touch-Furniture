@@ -1,4 +1,4 @@
-{% extends 'accounts/base.html' %}
+{% extends 'layout/base.html' %}
 {% load static %}
 <!-- Start Header/Navigation -->
 {% block style %}
@@ -69,8 +69,8 @@
                     </div>
                 </div>
                 {% for wishlist_item in wishlist %}
-                    <div class="card mb-3" style="box-shadow: 5px 10px 5px rgb(40, 40, 40);"><span
-                            class="border border-success"></span>
+                    <div class="card mb-3">
+                        <span class="border border-success"></span>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-3">
@@ -82,24 +82,26 @@
                                     <h6 style="color: rgb(250, 1, 1); font-family: Verdana, Geneva, Tahoma, sans-serif">
                                         Rs.{{ wishlist_item.product_name.selling_price }}</h6>
                                 </div>
-                                <div class="col-lg-3 flex-coloum">
-                                    <a href="{% url 'add_cart' product_id=wishlist_item.product_name.id %}">
-                                        <button class="btn" style="background-color: rgb(61, 86, 92);color:rgba(236, 209, 7, 0.96)">ADD TO CART</button>
-                                    </a>
-                                    <a href="{% url 'remove_wishlist' product_id=wishlist_item.product_name.id %}"> 
-                                        <button class="btn mt-3" style="background-color: rgb(6, 185, 230);color:rgba(255, 255, 255, 0.96)">REMOVE FROM WISHLIST</button>
-                                    </a>
+                                <div class="col-lg-3">
+                                    <div class="d-flex flex-column">
+                                        <a href="{% url 'add_cart' product_id=wishlist_item.product_name.id %}">
+                                            <button class="btn btn-block" style="background-color: rgb(61, 86, 92); color: rgba(236, 209, 7, 0.96);">ADD TO CART</button>
+                                        </a>
+                                        <a href="{% url 'remove_wishlist' product_id=wishlist_item.product_name.id %}">
+                                            <button class="btn btn-block mt-2" style="background-color: rgb(61, 86, 92); color: white;">REMOVE FROM WISHLIST</button>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
-            {% else %}
+        {% else %}
             <div class="d-flex justify-content-center mt-5 mx-5">
-                <h2 style="color: red; padding-left: 430px; padding-top: 100px;"> (Wishlist is empty)</h2>
+                <h2 style="color: red; padding-left: 20px; padding-top: 100px;"> (Wishlist is empty)</h2>
             </div>
-            {% endif %}
+        {% endif %}
         </div>
     </div>
 </div>

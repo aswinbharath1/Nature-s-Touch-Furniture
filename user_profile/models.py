@@ -17,7 +17,11 @@ class Address(models.Model):
     is_default = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Address for {self.recipient_name}"# class Address(models.Model):
+        return f"Address for {self.recipient_name}"
+    
+    
+    
+# class Address(models.Model):
 #     user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 #     house_no = models.IntegerField()
 #     recipient_name = models.CharField(max_length=100)

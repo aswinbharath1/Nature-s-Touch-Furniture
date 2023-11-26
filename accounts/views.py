@@ -119,7 +119,7 @@ def OtpVerification(request):
              
             if valid_until > datetime.now():
                 totp=pyotp.TOTP(otp_secret_key, interval=60)
-
+                print('this is my totp',totp)
                 if totp.verify(otp):
                     my_User = CustomUser.objects.create_user(email=user_email,password=password, username=username,phone=phone)
                     my_User.save()

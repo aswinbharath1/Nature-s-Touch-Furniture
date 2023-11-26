@@ -1,6 +1,7 @@
 
 from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
+from store.models import *
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login,logout
 from accounts.models import CustomUser, UserWallet
@@ -34,8 +35,7 @@ def AdminLogin(request):
 
     return render(request,"dashboard/adminlogin.html")
 
-def AdminHome (request):
-
+def AdminHome(request):
     return render(request, 'dashboard/adminhome.html')
 
 def AdminLogout(request):
@@ -140,22 +140,62 @@ def DeleteCategories(request,category_id):
     if category.is_activate:
         category.is_activate=False
         category.save()
-
+        try:
+            sub=Sub_Category.objects.filter(category=category)
+            for item in sub:
+                item.is_activate=False
+                item.save()
+                try:
+                    products=Product.objects.filter(sub_category=item)
+                    for product in products:
+                        product.is_activate=False
+                        print('hihterehhtereerereerererere')
+                        try:
+                            variant=Variation.objects.filter(product=product)
+                            for variant in variant:
+                                variant.is_available=False
+                        except:
+                            pass
+                except:
+                    pass
+        except:
+            pass
        
     
         category=Category.objects.all().order_by('id')
         context={
             'categories':category
         }
-        return render(request,'dashboard/category.html',context)
+        return render(request,'dashboard/categories.html',context)
     else:
         category.is_activate=True
         category.save()
+        # categories=Category.objects.all
+        try:
+            sub=Sub_Category.objects.filter(category=category)
+            for item in sub:
+                item.is_activate=True
+                item.save()
+                try:
+                    products=Product.objects.filter(sub_category=item)
+                    for product in products:
+                        product.is_activate=True
+                        try:
+                            variant=Variation.objects.filter(product=product)
+                            for variant in variant:
+                                variant.is_available=True
+                        except:
+                            pass
+                except:
+                    pass
+        except:
+            pass
+
         category=Category.objects.all().order_by('id')
         context={
             'categories':category
         }
-        return render(request,'dashboard/category.html',context)
+        return render(request,'dashboard/categories.html',context)
     
 
 # View for displaying subcategories
@@ -221,23 +261,34 @@ def EditSubCategories(request, subcategory_id):
 
 # View for activating or deactivating subcategories
 def DeleteSubCategories(request, subcategory_id):
-    category = Sub_Category.objects.get(pk=subcategory_id)
+    category=Sub_Category.objects.get(pk=subcategory_id)
 
     if category.is_activate:
-        category.is_activate = False
+        category.is_activate=False
+        category.save()
+
+       
+        
+        category=Category.objects.filter(is_activate=True).order_by('id')
+        subcategory=Sub_Category.objects.all().order_by('id')
+        context={
+            'subcategories':subcategory,
+            'categories':category
+        }
+
+        return render(request,'dashboard/subcategories.html',context)
     else:
-        category.is_activate = True
+        category.is_activate=True
+        category.save()
+        
 
-    category.save()
-
-    # Fetch active categories and all subcategories, ordering them by ID
-    categories = Category.objects.filter(is_activate=True).order_by('id')
-    subcategories = Sub_Category.objects.all().order_by('id')
-    context = {
-        'subcategories': subcategories,
-        'categories': categories
-    }
-    return render(request, 'dashboard/subcategories.html', context)
+        category=Category.objects.filter(is_activate=True).order_by('id')
+        subcategory=Sub_Category.objects.all().order_by('id')
+        context={
+            'subcategories':subcategory,
+            'categories':category
+         }
+    return render(request,'dashboard/subcategories.html',context)
 
 def coupon(request):
     
@@ -458,3 +509,52 @@ def OrderStatus(request):
         'order_item': order_item
     }
     return render(request, 'dashboard/orders_details.html', context)
+
+
+
+
+def GetSalesRevenue(request):
+    # Replace this with your actual data retrieval logic
+    # Example mock data
+    data = {
+        'labels': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        'sales': [100, 200, 150, 300, 250, 400],
+        'revenue': [500, 600, 550, 700, 650, 800],
+    }
+
+    return JsonResponse(data)
+
+
+
+
+def RenderToPdf(template_path, context_dict):
+    template = get_template(template_path)
+    html = template.render(context_dict)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="Sales_report.pdf"'
+
+    # Create a PDF with xhtml2pdf
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+
+
+def SalesReportPdfDownload(request):
+    if 'start_date' and 'end_date' in request.session:
+         start_date = request.session['start_date']
+         end_date = request.session['end_date']
+         try:
+             order = Order.objects.filter(created_at__range=(start_date, end_date))
+             del request.session['start_date']
+             del request.session['end_date']
+         except:
+             order=None
+    else:
+
+        order = Order.objects.all()
+    context = {
+        'orders': order,
+    }
+    pdf = RenderToPdf('dashboard/sales_report_pdf.html', context)
+    return pdf
