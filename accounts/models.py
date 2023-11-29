@@ -41,8 +41,9 @@ class CustomUser(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     phone = models.CharField(max_length=20,unique=False,verbose_name='phone number',blank=True,null=True, help_text='enter 10 digit phone number')
     username = models.CharField(max_length=20,unique=False,verbose_name='username',blank=True,null=True,)
-   
+    otp = models.IntegerField(default=0)
     wallet  = models.PositiveIntegerField(default=0)
+    is_verified = models.BooleanField(default=False)
     groups = models.ManyToManyField(
         AuthGroup,
         verbose_name='groups',

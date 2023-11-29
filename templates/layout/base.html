@@ -34,7 +34,15 @@
             <li>
               <a class="nav-link" href="{% url 'shop_page' %}">Shop</a>
             </li>
-            
+            <li>
+              <a class="nav-link" href="#">About us</a>
+            </li>
+            <li>
+              <a class="nav-link" href="#">Services</a>
+            </li>
+            <li>
+              <a class="nav-link" href="#">Contact us</a>
+            </li>
             {% if user.is_authenticated %}
               <li>
                 <a class="nav-link" href="{% url 'user_logout' %}">Logout</a>
@@ -67,7 +75,7 @@
     <footer class="footer-section">
       <div class="container relative">
         <div class="sofa-img">
-          <img src="{% static 'images/sofa.png' %}" alt="Image" class="img-fluid" />
+          <img  src="{% static 'images/sofa.png' %}" alt="Image" class="img-fluid" />
         </div>
 
         <div class="row">

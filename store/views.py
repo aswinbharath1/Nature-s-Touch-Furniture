@@ -117,7 +117,9 @@ def AddVariant(request,product_id):
         image2 = images[1]
         image3 = images[2]
         image4 = images[3]
-        
+        if Variation.objects.filter(color=color).exists():
+            messages.error(request,"color is already selected")
+            return redirect('variant_view')
         variant = Variation(
             product = product,
             color = color,
@@ -138,33 +140,50 @@ def AddVariant(request,product_id):
 def EditVariants(request, variant_id):
     variant = get_object_or_404(Variation, pk=variant_id)
     product_id = variant.product.id
-
+    product=Product.objects.get(id=product_id)
     if request.method == 'POST':
         # Update the Variation object with new data
+        color = request.POST.get('color')
         variant.color = request.POST.get('color')
         variant.stock = request.POST.get('stock')
         variant.actual_price = request.POST.get('ActualPrice')
         variant.selling_price = request.POST.get('SellingPrice')
-        
+
+        if Variation.objects.filter(color=color, product=product).exclude(id=variant_id).exists():
+
+            messages.error(request,"color is already selected")
+            return redirect('variant_view',product_id=product_id)
+        else:
         # Handle image uploads
-        images = request.FILES.getlist('VariantImage')
-        for i in range(min(len(images), 4)):
-            image_field_name = f'image{i+1}'  # image1, image2, image3, image4
-            image = images[i]
-            setattr(variant, image_field_name, image)
+            images = request.FILES.getlist('VariantImage')
+            for i in range(min(len(images), 4)):
+                image_field_name = f'image{i+1}'  # image1, image2, image3, image4
+                image = images[i]
+                setattr(variant, image_field_name, image)
 
-        # Delete existing image files only if new images are uploaded
-        if any(images):
-            if variant.image1 and os.path.exists(variant.image1.path):
-                os.remove(variant.image1.path)
-            if variant.image2 and os.path.exists(variant.image2.path):
-                os.remove(variant.image2.path)
-            if variant.image3 and os.path.exists(variant.image3.path):
-                os.remove(variant.image3.path)
-            if variant.image4 and os.path.exists(variant.image4.path):
-                os.remove(variant.image4.path)
+            # Delete existing image files only if new images are uploaded
+            if any(images):
+                if variant.image1 and os.path.exists(variant.image1.path):
+                    os.remove(variant.image1.path)
+                if variant.image2 and os.path.exists(variant.image2.path):
+                    os.remove(variant.image2.path)
+                if variant.image3 and os.path.exists(variant.image3.path):
+                    os.remove(variant.image3.path)
+                if variant.image4 and os.path.exists(variant.image4.path):
+                    os.remove(variant.image4.path)
 
+            variant.save()
+            return redirect('variant_view', product_id)
+
+def DeleteVariant(request,variant_id):
+    variant=Variation.objects.get(pk=variant_id)
+    product_id=variant.product.id
+    if variant.is_available:
+        variant.is_available=False
         variant.save()
-        return redirect('variant_view', product_id)
 
-    
+    else:
+        variant.is_available=True
+        variant.save()
+
+    return redirect('variant_view',product_id)

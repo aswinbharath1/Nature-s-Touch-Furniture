@@ -127,30 +127,32 @@
                         <td>₹ {{ tax }}</td>
                     </tr>
                     <tr>
+                        <td><strong class="mx-2">Discount</strong></td>
+                        <td>₹ <span id = 'discounts'></span> 0</td>
+                    </tr>
+                    <tr>
                         <td><strong class="mx-2">Grand Total</strong></td>
-                        <td>₹ {{ grand_total }}</td>
+                        <td >₹ <span  id='grand_total'>{{ grand_total }}</span> </td>
                     </tr>
                 </tbody>
             </table>
 
             <div>
-                 <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary">
                     Cash on delivery
                     </button>
-                    <button class="btn btn-secondary paywithRazorpay">
+                <button class="btn btn-secondary paywithRazorpay">
                         Pay With RazorPay
-                    </button>
-            {% if grand_total < wallet %} 
-                    <div>
-                        <button class="mt-2 text-light paywithwallet"
-                            style="background-color:#094cf4;border-radius:20px; width:300px; height:50px; border: 2px solid #f4f4f4; padding:10px;">
-                            Pay With Wallet
-                        </button>
-                    </div>
-                <!-- {%else%} -->
+                </button>
                 
-                <!-- <input type="checkbox" placeholder="apply wallet"> -->
-            {% endif %}
+                <div>
+                    <button class="mt-2 text-light paywithwallet"
+                        style="background-color:#094cf4;border-radius:20px; width:300px; height:50px; border: 2px solid #f4f4f4; padding:10px;">
+                        Pay With Wallet
+                    </button>
+                </div>
+                
+                
                     
                     
             </div>
@@ -189,9 +191,13 @@
  
  </script>
  <script>
+    jQuery.noConflict(); // Release the $ variable
+
      document.getElementById('ApplyCoupon').addEventListener('click', function () {
+        console.log("this is woeljifbsduifguief")
          var coupon_code = document.getElementById('coupon').value;
-         var grand_total = document.getElementById('grand_total').value;
+         var grand_total = document.getElementById('grand_total').innerText;
+         console.log(grand_total,"This is the total value to Checkout")
          var token = $("[name='csrfmiddlewaretoken']").val();
          var dataToSend = {
              key1: coupon_code,
@@ -206,9 +212,14 @@
              data: dataToSend,
              success: function (response) {
                  // Handle the response from the server
-                 console.log(response.total);
-                 document.getElementById('total_value').innerText = "₹" + " " + response.total;
+                 console.log(document.getElementById('discounts').innerText)
+                 document.getElementById('discounts').innerText =  + response.discount_amount;
  
+                 console.log(response.total);
+                 console.log("this is the discounted amount ",response.discount_amount);
+                 console.log("this is the discounted amount1111 ",response.total);
+                 //document.getElementById('total_value').innerText = "₹" + " " + response.total;
+
                  document.getElementById('grand_total').innerText = response.total;
              },
              error: function (error) {
@@ -217,6 +228,7 @@
              }
          });
      });
+
  </script>
  <script>
      $(document).ready(function () {

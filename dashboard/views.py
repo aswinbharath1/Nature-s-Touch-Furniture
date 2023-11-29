@@ -36,7 +36,21 @@ def AdminLogin(request):
     return render(request,"dashboard/adminlogin.html")
 
 def AdminHome(request):
-    return render(request, 'dashboard/adminhome.html')
+    Delevered  = Order.objects.filter(status = 'Delevered').count()
+    Users_active= CustomUser.objects.filter(is_active=True).count()
+    Users_block= CustomUser.objects.filter(is_active=False).count()
+    orders=Orders.objects.filter(status='Order confirmed')
+    revenue = 0
+    
+    print(Delevered)
+    context ={
+        'Delevered':Delevered,
+        'Users_active': Users_active,
+        'Users_block':Users_block,
+        
+    }
+
+    return render(request, 'dashboard/adminhome.html', context)
 
 def AdminLogout(request):
     if 'adminemail' in request.session:
@@ -514,15 +528,7 @@ def OrderStatus(request):
 
 
 def GetSalesRevenue(request):
-    # Replace this with your actual data retrieval logic
-    # Example mock data
-    data = {
-        'labels': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        'sales': [100, 200, 150, 300, 250, 400],
-        'revenue': [500, 600, 550, 700, 650, 800],
-    }
-
-    return JsonResponse(data)
+    pass
 
 
 

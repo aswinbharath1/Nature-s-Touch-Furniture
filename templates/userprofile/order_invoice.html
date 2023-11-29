@@ -148,8 +148,11 @@
             </tfoot>
         </table>
         <div class="total-section">
-            <p><strong>Payment Status:</strong> {{ order.payment_status }}</p>
-            <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+            {% if order.payment_mode == 'Paid by Razorpay' %}
+            <p><strong>Payment Status:</strong> Success </p>
+            {% comment %} <p><strong>Payment Status:</strong> {{ order.payment_status }}</p> {% endcomment %}
+            {% endif %}
+            <p><strong>Payment Method:</strong> {{ order.payment_mode }}</p>
         </div>
     </div>
 </body>

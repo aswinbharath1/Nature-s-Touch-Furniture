@@ -16,6 +16,7 @@ urlpatterns = [
     path('user-orders/', views.MyOrders, name='my_orders'),
     path('order-details/<int:order_id>/', views.OrderDetails, name='order_details'),
     path("order-cancellation/<int:order_id>/", views.OrderCancellation, name="order_cancellation"),
+    path('order-return/<int:order_id>/',views.OrderReturn,name="order_return"),
 
     path('pdf-download/<int:id>/', views.PdfDownload, name='pdf_download'),
 

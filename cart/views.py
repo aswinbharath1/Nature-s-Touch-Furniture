@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import JsonResponse,HttpResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
-from accounts.models import CustomUser
+from accounts.models import CustomUser, UserWallet
 from user_profile.models import Address
 from wishlist.models import *
 from .models import *
@@ -493,8 +493,9 @@ def ApplyCoupon(request):
         discount_amount=coupon.discount
         total=grand_totals-discount_amount
         request.session['grand_total'] = total
+        return JsonResponse({"total": f"{total}", "discount_amount": f"{discount_amount}"})
 
-        return JsonResponse({"total":f"{total}"})
+
 
 def OrderSuccess(request):
     return render(request,'cart/thankyou.html')

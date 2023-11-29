@@ -220,17 +220,15 @@ def RenderToPdf(template_src, context_dict={}):
 def PdfDownload(request,id):
     order=Order.objects.get(id=id)
     neworderitems=OrderItem.objects.filter(order=order)
-    cont = {
+    context = {
         'order': order,
         'cart_items': neworderitems
     }
-    pdf = RenderToPdf('userprofile/order_invoice.html', cont)
+    pdf = RenderToPdf('userprofile/order_invoice.html', context)
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
-        filename = "Invoice_%s.pdf" % (cont['order'])
+        filename = "Invoice_%s.pdf" % (context['order'])
         content = "inline; filename='%s'" % (filename)
-        # download = request.GET.get("download")
-        # if download:
         content = "attachment; filename=%s" % (filename)
         response['Content-Disposition'] = content
         return response
@@ -253,8 +251,12 @@ def OrderReturn(request,order_id):
 def UserWallets(request):
 
     wallets=UserWallet.objects.filter(user=request.user)
+    if request.user:
+        user =  request.user
+        balance = user.wallet
     context={
         'wallets':wallets,
+        'balance': balance,
     }
 
     return render(request,'userprofile/wallet.html',context)
