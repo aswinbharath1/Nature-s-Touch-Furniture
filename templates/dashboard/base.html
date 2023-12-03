@@ -36,7 +36,7 @@
 
     /* Header Styles */
     .header {
-        background-color: #1f4e79;
+        background-color: #2D7537;
         color: #fff;
         padding: 10px 0;
     }
@@ -45,13 +45,7 @@
         margin: 0;
     }
 
-    /* Search Container Styles */
-    .search-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
-
+   
    
 
     /* Logout Button Styles */
@@ -108,7 +102,7 @@
         </div>
 
         <div class="row">
-            <nav class="col-lg-2 d-flex d-md-block bg-light sidebar">
+            <nav class="col-lg-2 d-flex d-md-block sidebar" style="background-color: rgb(237, 237, 193);">
        
                 <ul class="nav flex-column">
                     {% block navlinks %}
@@ -116,6 +110,12 @@
                         <a class="nav-link active" href="{% url 'admin_home' %}">
                             <i class="fa fa-tachometer-alt me-2"></i>
                             Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'get_sales_revenue' %}">
+                            <i class="fas fa-flag me-2"></i>
+                                 Get Sales Revenue
                         </a>
                     </li>
                     <li class="nav-item">
@@ -165,7 +165,7 @@
                 </ul>
             </nav>
 
-            <div class="col-lg-10 content">
+            <div class="col-lg-10 content" style="background-color: rgb(237, 237, 193);">
                 {% block content %}
 
 

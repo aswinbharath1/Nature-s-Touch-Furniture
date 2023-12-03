@@ -7,12 +7,63 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 {% endblock %}
 {% block content %}
+<Style>
+  .vl{
+    border-left: 6px solid grey;
+    margin-left: 4rem;
+    height: 19rem;
+  }
+</Style>
+<!-- This part shows the admin panel upper side div of the whold details -->
+<div class="custom-container col-lg-12 my-4 d-flex justify-content-center">
+  <div class="d-flex">
+      <div class="custom-col-md-4 mb-4 p-3">
+          <div class="custom-card shadow-lg p-3 mb-5 bg-white rounded">
+              <div class="custom-card-body">
+                  <h5 class="custom-card-title">User Count</h5>
+                  <p class="custom-card-text text-primary ">{{ users_active }}</p>
+              </div>
+          </div>
+      </div>
+      <div class="custom-col-md-4 mb-4 p-3">
+          <div class="custom-card shadow-lg p-3 mb-5 bg-white rounded">
+              <div class="custom-card-body">
+                  <h5 class="custom-card-title">Revenue</h5>
+                  <p class="custom-card-text text-danger">{{ total_sales }}</p>
+              </div>
+          </div>
+      </div>
+      <div class="custom-col-md-4 mb-4 p-3">
+          <div class="custom-card shadow-lg p-3 mb-5 bg-white rounded">
+              <div class="custom-card-body">
+                  <h5 class="custom-card-title">Order Count</h5>
+                  <p class="custom-card-text text-success">{{ orders_count }}</p>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
 
+
+
+
+<!-- end of the div -->
+
+
+
+<!-- The Charts -->
+
+<hr>
 <div class="d-flex">
     <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+    <div class="vl"></div>
     <canvas id="myChart2" style="width:100%;max-width:600px"></canvas>
 </div>
-    
+<hr>
+
+<!-- End of the Charts -->
+
+
 
 
 
@@ -20,14 +71,13 @@
 
 {% block script %}
 <script>
-    var xValues = ["Delevered", "France", "Spain", "USA", "Argentina"];
-    var yValues = [{{Delevered}}, 49, 44, 24, 15];
+    var xValues = ["Delevered", "Confirmed", "Cancelled", "Returned" ];
+    var yValues = [{{orders_delevered}} , {{orders_confirmed}}, {{orders_cancelled}}, {{orders_returned}} ];
     var barColors = [
       "#b91d47",
       "#00aba9",
       "#2b5797",
-      "#e8c3b9",
-      "#1e7145"
+      "#e8c3b9"
     ];
     
     new Chart("myChart", {
@@ -42,7 +92,7 @@
       options: {
         title: {
           display: true,
-          text: "World Wide Wine Production 2018"
+          text: "Orders Status"
         }
       }
     });
@@ -50,7 +100,7 @@
 <!-- mychart 2-->
 <script>
     var xValues = ["Users Active", "Users Blocked"];
-    var yValues = [{{Users_active}},{{Users_block}}];
+    var yValues = [{{users_active}},{{users_block}}];
     var barColors = [
     "#00aba9",
     "#b91d47",
@@ -69,7 +119,7 @@
       options: {
         title: {
           display: true,
-          text: "World Wide Wine Production 2018"
+          text: "Users"
         }
       }
     });

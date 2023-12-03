@@ -24,7 +24,7 @@ urlpatterns = [
     path('login/',include('accounts.urls')),
     path('adminhome/',include('dashboard.urls')),
     path('store/',include('store.urls')),
-    path('user_profile/',include('user_profile.urls')),
+    path('user-profile/',include('user_profile.urls')),
     path('cart/',include('cart.urls')),
     path('wishlist/',include('wishlist.urls')),
 
@@ -35,6 +35,6 @@ urlpatterns = [
 
 
 
-# if settings.DEBUG:
-urlpatterns += static(settings.STATIC_URL,documents_root=settings.STATIC_ROOT)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL,documents_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

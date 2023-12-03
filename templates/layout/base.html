@@ -16,6 +16,12 @@
     <link href="{% static 'css/tiny-slider.css' %}" rel="stylesheet" />
     <link href="{% static 'css/style.css' %}" rel="stylesheet" />
     <title>Nature's Touch Furniture</title>
+ 
+    {% block bootstraplink %}
+    
+    
+    {% endblock bootstraplink %}
+
   </head>
 
   <body>
@@ -33,15 +39,6 @@
             </li>
             <li>
               <a class="nav-link" href="{% url 'shop_page' %}">Shop</a>
-            </li>
-            <li>
-              <a class="nav-link" href="#">About us</a>
-            </li>
-            <li>
-              <a class="nav-link" href="#">Services</a>
-            </li>
-            <li>
-              <a class="nav-link" href="#">Contact us</a>
             </li>
             {% if user.is_authenticated %}
               <li>
@@ -81,19 +78,7 @@
         <div class="row">
           <div class="col-lg-8">
             <div class="subscription-form">
-              <h3 class="d-flex align-items-center"><span class="me-1"><img src="{% static 'images/envelope-outline.svg' %}" alt="Image" class="img-fluid" /></span><span>Subscribe to Newsletter</span></h3>
 
-              <form action="#" class="row g-3">
-                <div class="col-auto">
-                  <input type="text" class="form-control" placeholder="Enter your name" />
-                </div>
-                <div class="col-auto">
-                  <input type="email" class="form-control" placeholder="Enter your email" />
-                </div>
-                <div class="col-auto">
-                  <button class="btn btn-primary"><span class="fa fa-paper-plane"></span></button>
-                </div>
-              </form>
             </div>
           </div>
         </div>

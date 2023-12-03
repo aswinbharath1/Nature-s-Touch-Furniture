@@ -84,7 +84,9 @@ def VariantSelect(request,variant_id):
     variants = Variation.objects.get(pk=variant_id)
     product_id = variants.product
 
-    return render(request,'product_details.html',variant_id)
+    # return render(request,'product_details.html',variant_id)
+    return render(request, 'product_details.html', {'variant_id': variant_id})
+
 
 
 def ProductSearch(request):

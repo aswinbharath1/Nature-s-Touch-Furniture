@@ -15,29 +15,27 @@
     }
 </style> -->
 <style>
-    * {
-        box-sizing: border-box;
-    }
-
+    * {box-sizing: border-box;}
+    
     .img-zoom-container {
-        position: relative;
+      position: relative;
     }
-
+    
     .img-zoom-lens {
-        position: absolute;
-        border: 1px solid #d4d4d4;
-        /*set the size of the lens:*/
-        width: 40px;
-        height: 40px;
+      position: absolute;
+      border: 1px solid #d4d4d4;
+      /*set the size of the lens:*/
+      width: 40px;
+      height: 40px;
     }
-
+    
     .img-zoom-result {
-        border: 1px solid #d4d4d4;
-        /*set the size of the result div:*/
-        width: 300px;
-        height: 300px;
+      border: 1px solid #d4d4d4;
+      /*set the size of the result div:*/
+      width: 300px;
+      height: 300px;
     }
-</style>
+    </style>
 
 {% endblock %}
 
@@ -94,15 +92,14 @@
 
                 <h4><strong>Rs.</strong></h3>
 
-                    <h4 class="mr-2" id="price" style="color:rgb(255, 0, 0)" mb-3 !important">{{variant.selling_price}}</h4>
-                    <h6><del style="color:rgb(159, 159, 159)">{{variant.actual_price}}</del></h6>
-            </div>
+                    <h4 class="mr-2" id="price" style="color:rgb(255, 0, 0)" mb-3 !important"> {{variant.selling_price}} </h4>
+                    {% if variant.actual_price != variant.selling_price %}
+                        <h6><del style="color:rgb(159, 159, 159)">{{variant.actual_price}}</del></h6>
+                    {% endif %}
+                </div>
 
 
-            <!-- {% if product.stock == 0 %}
-            <button class="btn btn-danger-sm mb-3">Out of stock</button>
-            <p class="sorry_msg">Sorry, for this inconvinence</p>
-            {% else %} -->
+           
             <div class="d-flex mt-3">
                 {% if variant.stock == 0 %}
                 <button style="color: rgb(244, 242, 242);background-color:rgb(0, 0, 0); border: none;">OUT OF STOCK</button>
@@ -114,7 +111,6 @@
             </div>
 
 
-            {% endif %}
             <h5 class="mt-4" style="color:rgb(49, 36, 36)">Available Vatiants</h5>
             <div class="d-flex">
 
@@ -125,7 +121,7 @@
                     <a href="{% url 'variant_select' variant_id=variants.id %}">
                     <button type="button" class="btn variant-button" id="variant-selector-{{ variants.id }}"
                         data-variant-id="{{ variants.id }}"
-                        style=" background: {{ variants.color }} ; margin-right:5px; width: 35px; height: 2px;border-radius:50%;">
+                        style=" background: {{ variants.color }} ; margin-right:5px; width: 35px; height: 2px;border-radius:10%;">
 
                     </button>
                     </a>
@@ -311,7 +307,7 @@
         subImage.setAttribute("src", mainImageSrc);
     }
 </script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.getElementById('wishlist').addEventListener('click', function() {
         Swal.fire({
@@ -321,7 +317,7 @@
             confirmButtonText: 'Okay'
         });
     });
-</script> -->
+</script> 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         setTimeout(function () {

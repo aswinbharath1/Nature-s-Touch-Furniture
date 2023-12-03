@@ -6,6 +6,9 @@ from django.views.decorators.cache import cache_control
 from django.contrib import messages
 from .models import CustomUser, CustomUserManager
 import pyotp
+import random 
+import json
+import string
 from .utils import send_otp
 from django.conf import settings
 from django.core.mail import send_mail
@@ -71,36 +74,13 @@ def UserSignup(request):
         confirm_password = request.POST.get('confirmpassword')
         
        
-    # checking the user name is valid or not
-        # if  len(username) <= 4:
-        #     messages.error(request,'username should be atleast 4 characters in length')
-        #     return redirect('user_signup')
-        
-
-        # Allow only alphanumeric characters and underscores
-        # pattern = r"^\w+$"
-        # username_matching= bool(re.match(pattern, username))
-        # if username_matching is False:
-        #     messages.error(request,'The username entered is invalid')
-        #     return redirect('user_signup')   
-     #<-------------------------------------------------------------------------->
+   
     #checking the email is valid or not
         email_checking = CustomUser.objects.filter(email = user_email)
         if  email_checking.exists():
             messages.error(request,"email is already taken") 
             return redirect('user_signup')
-    #<-------------------------------------------------------------------------->
-    # checking the phone number is correct or not
-        # if len(phone)<10:
-        #     messages.error(request,'Entered phone number is not valid')
-        #     return redirect('user_signup')
-        # number_pattern = re.compile(r'^[0-9]+$')
-        # phone_number_match = bool(re.match(number_pattern, phone))
-        # if phone_number_match is False:
-        #     messages.error(request,'phone number is not valid')
-        #     return redirect('user_signup')
-    # <------------------------------------------------------------------------->
-    # 
+    
         
         elif password == confirm_password:
 
@@ -114,6 +94,11 @@ def UserSignup(request):
             
 
     return render(request,'accounts/signup.html')
+
+
+# def GenerateReferalCode():
+#     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+
 
 
 

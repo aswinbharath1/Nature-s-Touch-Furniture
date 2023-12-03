@@ -58,6 +58,8 @@ def CartId(request):
         cart=request.session.create()
     return cart
 
+
+@login_required(login_url='user_login')
 def AddCart(request,product_id):
 
     if 'useremail' in request.session:
@@ -127,10 +129,67 @@ def IncrementCartitem(request,product_id):
         print('this is not working perfectly')
     product = get_object_or_404(Variation,id=product_id)
     cart_item = CartItem.objects.get(product=product,cart=cart)
-    if cart_item.quantity>=1:
+    
+    if cart_item.quantity<product.stock:
         cart_item.quantity = cart_item.quantity+1
+        quantity=cart_item.quantity
+        cart_item_total = product.selling_price*quantity
         cart_item.save()
-    return redirect('cart_page')
+
+        total=0
+        try:
+        
+            cart = Cart.objects.get(user=user)
+            cart_items = CartItem.objects.filter(cart=cart,is_active=True).order_by('id')
+            for cart_item in cart_items:
+                total += (cart_item.product.selling_price * cart_item.quantity)
+                # quantity += cart_item.quantity
+            tax = (2*total)/100
+            grand_total = total + tax
+        except ObjectDoesNotExist:
+            pass
+        return JsonResponse(
+
+            {
+                'quantity': quantity,
+                'cart_item_total':cart_item_total,
+                'total':total,
+                'tax':tax,
+                'grand_total':grand_total,
+                'messages':'success'
+            }
+        )
+
+    else:
+        quantity=cart_item.quantity
+        cart_item_total = product.selling_price*quantity
+        cart_item.save()
+
+        total=0
+        try:
+        
+            cart = Cart.objects.get(user=user)
+            cart_items = CartItem.objects.filter(cart=cart,is_active=True).order_by('id')
+            for cart_item in cart_items:
+                total += (cart_item.product.selling_price * cart_item.quantity)
+                # quantity += cart_item.quantity
+            tax = (2*total)/100
+            grand_total = total + tax
+        except ObjectDoesNotExist:
+            
+            pass
+        return JsonResponse(
+
+            {
+                'quantity': quantity,
+                'cart_item_total':cart_item_total,
+                'total':total,
+                'tax':tax,
+                'grand_total':grand_total,
+                'messages':'error'
+            }
+        )
+
 
 
 
@@ -147,11 +206,60 @@ def DecrementCartitem(request,product_id):
 
     if cart_item.quantity > 1:
         cart_item.quantity -=1
+        quantity = cart_item.quantity
+        cart_item_total = product.selling_price*quantity
         cart_item.save()
-    else:
-        cart_item.delete()
+        total=0
+        try:
+            cart = Cart.objects.get(user=user)
+            cart_items = CartItem.objects.filter(cart=cart,is_active=True).order_by('id')
+            for cart_item in cart_items:
+                total += (cart_item.product.selling_price * cart_item.quantity)
+                # quantity += cart_item.quantity
+            tax = (2*total)/100
+            grand_total = total + tax
+        except ObjectDoesNotExist:
+            
+            pass
+        return JsonResponse(
 
-    return redirect('cart_page')
+            {
+                'quantity': quantity,
+                'cart_item_total':cart_item_total,
+                'total':total,
+                'tax':tax,
+                'grand_total':grand_total,
+                'status':'success'
+            }
+        )
+
+    else:
+        quantity = cart_item.quantity
+        cart_item_total = product.selling_price*quantity
+        cart_item.delete()
+        total=0
+        try:
+            cart = Cart.objects.get(user=user)
+            cart_items = CartItem.objects.filter(cart=cart,is_active=True).order_by('id')
+            for cart_item in cart_items:
+                total += (cart_item.product.selling_price * cart_item.quantity)
+                # quantity += cart_item.quantity
+            tax = (2*total)/100
+            grand_total = total + tax
+        except ObjectDoesNotExist:
+            
+            pass
+        return JsonResponse(
+
+            {
+                'quantity': quantity,
+                'cart_item_total':cart_item_total,
+                'total':total,
+                'tax':tax,
+                'grand_total':grand_total,
+                'status':'error'
+            }
+        )
 
 def RemoveCartItem(request,product_id):
 

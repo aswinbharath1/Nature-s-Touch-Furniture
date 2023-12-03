@@ -30,7 +30,6 @@ $(document).ready(function () {
                         "name":  'ASWIN',
                         "description": "Thank you",
                         "image": "https://example.com/your_logo",
-                        //                    "order_id": "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the id obtained in the response of Step 1
                         "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
                         "handler": function (response) {
                             data = {

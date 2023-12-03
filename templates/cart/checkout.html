@@ -48,20 +48,23 @@
 
         <div class="d-flex flex-wrap justify-content-center">
             {% for coupon in coupons %}
-                <div class="coupon-card mx-3 my-3">
-                    <h6 style="font-weight: bolder; color: rgb(1, 57, 27)">Coupon-{{ forloop.counter }}</h6>
-                    <div class="text-dark px-3 mb-3" style="background-color: #cccbcb; border: 3px solid rgb(106, 106, 106); border-radius: 5%;">
-                        <h5 class=""> Coupon Name: {{ coupon.coupon_name }}</h5>
+            <div class="coupon-card mx-3 my-3">
+                <h6 class="fw-bold text-success">Coupon-{{ forloop.counter }}</h6>
+                <div class="card mb-3" style="border: 1px solid rgb(106, 106, 106); border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                    <div class="card-body">
+                        <h5 class="card-title">Coupon Name: {{ coupon.coupon_name }}</h5>
                         <h6 class="mt-2">Coupon Code:</h6>
                         <div class="d-flex align-items-center">
-                            <input class="coupon-code" type="text" value="{{ coupon.code }}">
-                            <button type="button" onclick="copyText(this)">Copy</button>
+                            <input class="form-control coupon-code" type="text" value="{{ coupon.code }}" readonly>
+                            <button type="button" class="btn btn-primary ml-2" onclick="copyText(this)">Copy</button>
                             <div class="alert alert-success ml-2" role="alert" style="display: none;">Coupon code copied!</div>
                         </div>
                         <p class="mt-2" style="color: #04090a;">Enjoy a discount of Rs.{{ coupon.discount }} on your purchase!</p>
-                        <p class="text-danger mb-3">Valid from {{ coupon.valid_from }} to {{ coupon.valid_to }}</p>
+                        <p class="text-danger mb-0">Valid from {{ coupon.valid_from }} to {{ coupon.valid_to }}</p>
                     </div>
                 </div>
+            </div>
+            
             {% endfor %}
         </div>
     {% else %}
@@ -144,14 +147,15 @@
                 <button class="btn btn-secondary paywithRazorpay">
                         Pay With RazorPay
                 </button>
-                
+                {% if grand_total < wallet %} 
                 <div>
                     <button class="mt-2 text-light paywithwallet"
                         style="background-color:#094cf4;border-radius:20px; width:300px; height:50px; border: 2px solid #f4f4f4; padding:10px;">
                         Pay With Wallet
                     </button>
                 </div>
-                
+            {% endif %}
+
                 
                     
                     
@@ -164,6 +168,8 @@
 </form>
 
 {%endblock content%}
+
+
 {% block script %}
 <script>
     function copyText(button) {

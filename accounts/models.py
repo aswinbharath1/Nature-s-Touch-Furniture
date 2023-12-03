@@ -43,7 +43,9 @@ class CustomUser(AbstractUser):
     username = models.CharField(max_length=20,unique=False,verbose_name='username',blank=True,null=True,)
     otp = models.IntegerField(default=0)
     wallet  = models.PositiveIntegerField(default=0)
-    is_verified = models.BooleanField(default=False)
+    # referal_code = models.CharField(max_length = 12, unique = True , blank = True)
+    # referrer = models.ForeignKey('self', null=True , blank =True , on_delete= models.SET_NULL)
+    is_verified = models.BooleanField(default=False) 
     groups = models.ManyToManyField(
         AuthGroup,
         verbose_name='groups',

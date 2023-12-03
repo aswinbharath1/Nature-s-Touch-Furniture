@@ -137,7 +137,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="phone" class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" id="phone" name="phone" value="{{user.phone}}">
+                                <input type="tel" class="form-control" pattern="^(?:(\+91)?[7896]\d{9})?$" title="Please enter a valid mobile number."  id="phone" name="phone" value="{{user.phone}}">
                             </div>
                             <div class="d-flex justify-content-center col-lg-6 mt-2">
                                 <button type="submit" class="btn btn-primary">
@@ -329,7 +329,7 @@
                             <button class="toggle-btn icons-edit-delete" data-toggle="modal" data-target="#editAddressModal-{{forloop.counter}}">
                                 <!-- Edit icon -->
                                 <div class="icon-wrapper">
-                                    <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <svg class="edit-icon iconcustom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <path d="M14.5 5.5L3 17 3 21 7 21 18.5 9.5zM21.2 2.8c-1.1-1.1-2.9-1.1-4 0L16 4l4 4 1.2-1.2C22.3 5.7 22.3 3.9 21.2 2.8z"/>
                                     </svg>
                                 </div>
@@ -338,7 +338,7 @@
                                 <a href="{% url 'delete_address' address_id=addres.id %}">
                                     <!-- Delete icon -->
                                     <div class="icon-wrapper">
-                                        <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <svg class="delete-icon iconcustom" style xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                             <path d="M 10.806641 2 C 10.289641 2 9.7956875 2.2043125 9.4296875 2.5703125 L 9 3 L 4 3 A 1.0001 1.0001 0 1 0 4 5 L 20 5 A 1.0001 1.0001 0 1 0 20 3 L 15 3 L 14.570312 2.5703125 C 14.205312 2.2043125 13.710359 2 13.193359 2 L 10.806641 2 z M 4.3652344 7 L 5.8925781 20.263672 C 6.0245781 21.253672 6.877 22 7.875 22 L 16.123047 22 C 17.121047 22 17.974422 21.254859 18.107422 20.255859 L 19.634766 7 L 4.3652344 7 z"/>
                                         </svg>
                                     </div>
@@ -354,19 +354,18 @@
         </div>
         <!--Address Edit Modal -->
         {% for addres in address %}
-        <div class="modal fade" id="editAddressModal-{{forloop.counter}}" tabindex="-1"
-            aria-labelledby="editAddressModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
+<div class="modal fade" id="editAddressModal-{{forloop.counter}}" tabindex="-1"
+    aria-labelledby="editAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
                         <!-- Address Edit Form -->
-                        <form method="POST" action="{% url 'edit_address' address_id=addres.id%}">
+                        <form id="editAddressForm-{{forloop.counter}}" method="POST" action="{% url 'edit_address' address_id=addres.id%}" onsubmit="return validateForm('editAddressForm-{{forloop.counter}}')">
                             {% csrf_token %}
-
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -446,7 +445,8 @@
                 </div>
             </div>
         </div>
-        {%endfor%}
+        {% endfor %}
+        
 
 
 
@@ -504,5 +504,51 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script>
+    function capitalizeFirstLetter(inputElement) {
+        inputElement.value = inputElement.value.trim().replace(/\b\w/g, function (match) {
+            return match.toUpperCase();
+        });
+    }
+    
+    function validateForm(formId) {
+        var form = document.getElementById(formId);
+    
+        // Attach event listeners for real-time capitalization
+        ['RecipientName', 'house_no', 'street_name', 'Village', 'postal_code', 'district', 'state', 'country'].forEach(function (fieldName) {
+            var input = form.querySelector('[name="' + fieldName + '"]');
+            input.addEventListener('input', function () {
+                capitalizeFirstLetter(input);
+            });
+        });
+    
+        // House No validation
+        var houseNoInput = form.querySelector('[name="house_no"]');
+        if (!/^\d+$/.test(houseNoInput.value)) {
+            alert('Please enter a valid house number (numeric only).');
+            return false;
+        }
+    
+        // Postal Code validation
+        var postalCodeInput = form.querySelector('[name="postal_code"]');
+        if (!/^[1-9]\d{5}$/.test(postalCodeInput.value)) {
+            alert('Please enter a valid 6-digit postal code.');
+            return false;
+        }
+    
+        // Check for empty fields
+        var allInputs = form.querySelectorAll('input');
+        for (var i = 0; i < allInputs.length; i++) {
+            if (allInputs[i].type !== 'submit' && allInputs[i].value.trim() === '') {
+                alert('Please fill in all fields.');
+                return false;
+            }
+        }
+    
+        return true;
+    }
+    </script>
+    
+    
 
 {% endblock %}
