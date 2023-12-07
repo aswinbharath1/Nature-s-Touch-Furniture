@@ -1,6 +1,7 @@
 from django.db import models
 from accounts.models import CustomUser
 from user_profile.models import Address
+from store.models import *
 
 from store.models import Product, Variation
 
@@ -48,6 +49,7 @@ class Order(models.Model):
     payment_mode = models.CharField(max_length=150, null=False)
     payment_id = models.CharField(max_length=250, null=True)
     message = models.TextField(null=True)
+    coupon_applied = models.ForeignKey(Coupon, blank= True, null=True , default= True , on_delete=models.CASCADE)
     tracking_no = models.CharField(max_length=150, null=True)
     # Define orderstatuses as a tuple of tuples for status tracking
     orderstatuses = (

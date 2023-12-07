@@ -511,7 +511,6 @@ def OrderStatus(request):
                 return redirect(url)
             order = Order.objects.get(id=order_id)
             order_item = OrderItem.objects.filter(order=order)
-            
             order.status = order_status
             order.save()
             if order_status == 'Returned':
@@ -524,6 +523,15 @@ def OrderStatus(request):
                 userwallet.transaction = 'Credited'
                 userwallet.save()
                 user.save()
+                orderproduct = Variation.objects.filter(id=order.product.id).first()
+                orderproduct.stock = orderproduct.stock + order_item.quantity
+                orderproduct.save()
+            if order_status == 'Cancelled':
+            
+                orderproduct = Variation.objects.filter(id=order.product.id).first()
+                orderproduct.stock = orderproduct.stock + order_item.quantity
+                orderproduct.save()
+            
             order_item = OrderItem.objects.filter(order=order)
             context = {
                 'order': order,

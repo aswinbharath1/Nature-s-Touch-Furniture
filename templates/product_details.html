@@ -133,11 +133,11 @@
             <div class="mt-3">
                 <input id="variantID" type="hidden" value="{{ variant.id }}">
                 <a href="{% url 'add_cart' product_id=variant.id %}">
-                    <button class="btn btn-sm addtocart">Add to Cart</button>
+                    <button class="btn btn-primary addtocart">Add to Cart</button>
                 </a>
 
                 <a href="{% url 'add_wishlist' product_id=variant.id %}">
-                    <button class="btn" id="wishlist">Add to wishlist</button>
+                    <button class="btn btn-secondary" id="wishlist">Add to wishlist</button>
                 </a>
             </div>
 

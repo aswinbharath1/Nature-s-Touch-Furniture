@@ -181,11 +181,14 @@
 
 
 {% block script %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
 <script>
-	$(document).ready(function () {
-		$('body').on("click", "#increase", function () {
+
+	jQuery(document).ready(function () {
+		jQuery('body').on("click", "#increase", function () {
 			var variant_id = $(this).data("id");
 			console.log(variant_id);
 			var url = "/cart/increment-cart/" + variant_id + "/";
@@ -220,9 +223,13 @@
 					console.error("Error occurred: ", error);
 				}
 			});
+
+		  // Your existing code...
 		});
-	});
+	  });
+	
 </script>
+
 <script>
 	$(document).ready(function () {
 		$('body').on("click", "#decrease", function () {

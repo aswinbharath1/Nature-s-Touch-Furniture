@@ -232,6 +232,7 @@ def DecrementCartitem(request,product_id):
                 'status':'success'
             }
         )
+    
 
     else:
         quantity = cart_item.quantity
@@ -260,6 +261,7 @@ def DecrementCartitem(request,product_id):
                 'status':'error'
             }
         )
+        
 
 def RemoveCartItem(request,product_id):
 
@@ -382,11 +384,13 @@ def AddressCheckout(request):
 
         for i in address:
             print(i.recipient_name)
-        default_address =Address.objects.get(is_default=True)  
-
+        try:
+            default_address =Address.objects.get(is_default=True)  
+        except:
+            default_address = None
         context={
             'address':address,
-            'default_address': default_address
+            'default_address':default_address,
         }
         return render(request,'cart/address_selection.html',context)
 
@@ -436,22 +440,16 @@ def AddAddressCheckout(request,user_id):
     
 def PlaceOrder(request):
     if request.method == 'POST':
-        # print("hdskjhkhjjkkhkhhhjkjhjhjhjjj")
         email = request.session['useremail']
         user = CustomUser.objects.get(email=email)
        
         selected_address_id = request.POST.get('selected_address')
        
         address = Address.objects.get(id=selected_address_id)
-        
-        
-                
-
         order = Order()
         order.user = user
         order.address = address
         print(address.id)
-        # print(",,.,.><><><><><><><><><><><><><><><><><><><><><.")
         cart = Cart.objects.get(user=user)
         try:
             cart_item = CartItem.objects.filter(cart=cart, is_active=True)
@@ -470,14 +468,13 @@ def PlaceOrder(request):
                 order.total_price = cart_total_price + tax
         except:
             order.total_price = cart_total_price + tax
-        trackno = 'pvkewt' + str(random.randint(1111111, 9999999))
+        trackno = 'ntfon' + str(random.randint(1111111, 9999999))
         while Order.objects.filter(tracking_no=trackno) is None:
-            trackno = 'pvkewt' + str(random.randint(1111111, 9999999))
+            trackno = 'ntfon' + str(random.randint(1111111, 9999999))
         order.tracking_no = trackno
 
         payment_mode = request.POST.get('payment_mode')
-        # if payment_mode == 'cod':
-        # print("payment>>>>>>>>>>>>>>>>>>")
+       
         if payment_mode == 'Paid by Razorpay':
             order.payment_mode = request.POST.get('payment_mode')
             order.payment_id = request.POST.get('payment_id')
@@ -485,18 +482,14 @@ def PlaceOrder(request):
             print("welcom to wallet")
             try:
                 if request.session['grand_total']:
-                    # print('checkinggggggggggggggg....')
                     grand_total=float(request.session['grand_total'])
                     order.total_price = float(request.session['grand_total'])
                     del request.session['grand_total']
-                    # print('tryif...............')
                 else:
                     grand_total = cart_total_price + tax
-                    # print('tryelse..............>>>>>>>.')
             except:
                 print(tax)
                 grand_total = cart_total_price + tax
-                # print('except>>>>>>>>>>>>>>>>>>>>>>>>>...............')
             userwallet=UserWallet(user=user,
             amount=grand_total,
             transaction='debited')
@@ -506,7 +499,6 @@ def PlaceOrder(request):
             user.save()
             order.payment_mode = request.POST.get('payment_mode')
             order.payment_id = request.POST.get('payment_id')
-            # print("bye  wallet")
         else:
             order.payment_mode = 'cod'
             order.payment_id = ' '
@@ -590,14 +582,17 @@ def RazorpayCheck(request):
         return JsonResponse({'error': 'Internal Server Error'}, status=500)
 
 def ApplyCoupon(request):
+    
     if request.method=='POST':
         coupon_code = request.POST.get('key1')
+        
         grand_total=request.POST.get('key2')
         grand_totals=float(grand_total)
         try:
             coupon = Coupon.objects.get(code=coupon_code)
+            
         except:
-            print("hjhhkhjkkj")
+            print("its working on except")
         discount_amount=coupon.discount
         total=grand_totals-discount_amount
         request.session['grand_total'] = total

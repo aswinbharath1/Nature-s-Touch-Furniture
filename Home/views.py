@@ -80,12 +80,28 @@ def ProductDetails(request,variant_id):
     return render(request,'product_details.html',context)
 
 def VariantSelect(request,variant_id):
-
     variants = Variation.objects.get(pk=variant_id)
     product_id = variants.product
 
+    available_variants =Variation.objects.filter(product=product_id,is_available=True)
+
+    for i in available_variants:
+
+        print(i.color)
+    context={
+        # 'product':product,
+        'variant': variants,
+        'available_variants':available_variants
+    }
+
+    return render(request,'product_details.html',context)
+
+    # variants = Variation.objects.get(pk=variant_id)
+    # product_id = variants.product
+    
+
     # return render(request,'product_details.html',variant_id)
-    return render(request, 'product_details.html', {'variant_id': variant_id})
+    # return render(request, 'product_details.html', {'variant_id': variant_id})
 
 
 

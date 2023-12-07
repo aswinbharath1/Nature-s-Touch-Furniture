@@ -21,40 +21,35 @@
         <nav class="col-lg-2 d-md-block sidebar">
             <div class="position-sticky">
                 <div class="d-flex justify-content-center">
-                    <h4 class="mt-4 ml-3" style="color: rgb(70, 43, 43); font-weight:1200;">Hi {{user.username}}</h4>
+                    <h4 class="mt-4 ml-3" style="color: rgb(70, 43, 43); font-weight: 1200;">Hi {{user.username}}</h4>
                 </div>
-
-                <ul class="nav flex-column">
-                    <div class="itemsdiv mx-2 my-2">
-                        <li class="nav-item">
-                            <a class="nav-link navitem" href="{% url 'user_profile'%}">
-                                My Profile
-                            </a>
-                        </li>
+        
+                <div class="card mt-4 mx-2" style="border: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <a class="nav-link navitem" href="{% url 'user_profile'%}">
+                                    My Profile
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="nav-link navitem" href="{% url 'my_orders' %}">
+                                    My Orders
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="nav-link navitem" href="{% url 'wishlist_view' %}">
+                                    Wishlist
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="nav-link navitem" href="{% url 'user_wallet' %}">
+                                    Wallet
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="itemsdiv mx-2 my-2">
-                        <li class="nav-item">
-                            <a class="nav-link navitem" href="{% url 'my_orders'%}">
-                                My Orders
-                            </a>
-                        </li>
-                    </div>
-                    {% comment %} <div class="itemsdiv mx-2 my-2">
-                        <li class="nav-item">
-                            <a class="nav-link navitem" href="{% url 'wishlist_view'%}">
-                                Wishlist
-                            </a>
-                        </li>
-                    </div> {% endcomment %}
-                    <div class="itemsdiv mx-2 my-2">
-                        <li class="nav-item">
-                            <a class="nav-link navitem" href="{% url 'user_wallet'%}">
-                                Wallet
-                            </a>
-                        </li>
-                    </div>
-                </ul>
-
+                </div>
             </div>
         </nav>
         <div class="col-lg-10 col-md-8">
@@ -71,6 +66,9 @@
                     </div>
                     <div class="col-lg-3">
                         <h5 style="color: black;">Order Status</h4>
+                    </div>
+                    <div class="col-lg-3">
+                        <h5 style="color: black;">Ordered Address</h4>
                     </div>
                     <div class="col-lg-3">
                         <h5 style="color: black;">Total Amount</h4>
@@ -93,17 +91,42 @@
                                     <p
                                         style="color: rgb(7, 153, 102); font-family: Verdana, Geneva, Tahoma, sans-serif">
                                         {{orderitem.order.status}}</p>
+                                    {% if orderitem.order.coupon_applied %}
+                                        <h6 style="color: rgb(250, 1, 1); font-family: Verdana, Geneva, Tahoma, sans-serif">
+                                    <span>Coupon Applied</span>{{orderitem.order.coupon_applied}}</h6>
+                                   {% endif %}
+                                   {% if orderitem.quantity %}
+                                     <h6 style="color: rgb(250, 1, 1); font-family: Verdana, Geneva, Tahoma, sans-serif">
+                                        <span>Quantity : </span>{{orderitem.quantity}}</h6>
+                                   {% endif %} 
+                                </div>
+                                <div class="col-lg-3">
+                                    <p
+                                        style="color: rgb(7, 153, 102); font-family: Verdana, Geneva, Tahoma, sans-serif">
+                                       </p>
+                                       
+                                            <p><b> Delivery Address</b><br>
+                                            {{ order.address.recipient_name }}<br>
+                                            {{ order.address.street_name }} {{ order.address.house_no }}<br>
+                                            {{ order.address.district }}, {{ order.address.state }}, {{ order.address.postal_code }}<br>
+                                            {{ order.address.country }}</p>
+                                       
+
                                 </div>
                                 <div class="col-lg-3">
                                     <h6 style="color: rgb(250, 1, 1); font-family: Verdana, Geneva, Tahoma, sans-serif">
                                         Rs.{{orderitem.order.total_price}}</h6>
+                                        
+                                    <h6 style="color: rgb(250, 1, 1); font-family: Verdana, Geneva, Tahoma, sans-serif">
+                                        {{orderitem.order.payment_mode}}</h6>
+                                    
                                 </div>
 
 
                             </div>
-
-
                         </div>
+
+                    
                     </div>
                 </form>
 
@@ -164,6 +187,8 @@
 <div class="d-flex justify-content-center">
     <a href="{% url 'pdf_download' id=order.id %}"><button class="btn btn-primary">Download Invoice</button></a>
 </div>
+<div style="height: 100px; width: 100%; background-color: #f0f0f0;"></div>
+
 {% endblock content %}
 
 

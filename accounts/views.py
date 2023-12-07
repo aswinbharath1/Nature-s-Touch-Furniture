@@ -266,38 +266,23 @@ def ForgotPassOtp(request):
 # function for reseting the password
 
 def ResetPass(request):
-    if request.method=='POST':
-        otp=request.POST.get('otp')
-        if 'check_mail' in request.session:
-            email=request.session['check_mail']
-        user=CustomUser.objects.get(email=email)
-        actual_otp=user.otp
-        otp_secret_key=request.session['otp_secret_key']
-        otp_valid_date=request.session['otp_valid_date']
+    if request.method == "POST":
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
 
-        if otp_secret_key and otp_valid_date is not None:
-            valid_until =datetime.fromisoformat(otp_valid_date)
-
-            if valid_until > datetime.now():
-               totp=pyotp.TOTP(otp_secret_key,interval=60)
-
-               if actual_otp==int(otp):
-                   
-                #    del request.session['check_mail']
-                   del request.session['otp_valid_date']
-                   del request.session['otp_secret_key']
-
-                   return redirect('reset_pass')
-               else:
-                   messages.error(request,"OTP you have enterd is incorrect")
-                   return redirect('forgot_pass_otp')
-            else:
-                messages.error(request,"Time limit exceeded")
-
+        if password1 == password2:
+            email = request.session['check_mail']
+            try:
+                user = CustomUser.objects.get(email=email)
+                user.set_password(password1)  # Use set_password to hash and set the password
+                user.save()
                 del request.session['check_mail']
-                del request.session['otp_valid_date']
-                del request.session['otp_secret_key']
-                return redirect('forgot_pass_otp')
+                return redirect('user_login')
+            except CustomUser.DoesNotExist:
+                messages.error(request, "There is no account linked with this email")
+                del request.session['check_mail']
+                return redirect('reset_pass')
+        else:
+            messages.error(request, "Passwords do not match")
 
-
-    return render(request,'accounts/forgotpass_verify.html')
+    return render(request, 'accounts/resetpass.html')

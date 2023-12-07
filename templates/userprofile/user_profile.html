@@ -72,39 +72,35 @@
         <nav class="col-lg-2 d-md-block sidebar">
             <div class="position-sticky">
                 <div class="d-flex justify-content-center">
-                    <h4 class="mt-4 ml-3" style="color: rgb(102, 0, 0); font-weight:1200;">Hi {{user.username}}</h4>
+                    <h4 class="mt-4 ml-3" style="color: rgb(70, 43, 43); font-weight: 1200;">Hi {{user.username}}</h4>
                 </div>
-
-                <ul class="nav flex-column">
-                    <div class="itemsdiv mx-2 my-2">
-                        <li class="nav-item">
-                            <a class="nav-link navitem" href="{% url "user_profile" %}">
-                                My Profile
-                            </a>
-                        </li>
+        
+                <div class="card mt-4 mx-2" style="border: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <a class="nav-link navitem" href="{% url 'user_profile'%}">
+                                    My Profile
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="nav-link navitem" href="{% url 'my_orders' %}">
+                                    My Orders
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="nav-link navitem" href="{% url 'wishlist_view' %}">
+                                    Wishlist
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="nav-link navitem" href="{% url 'user_wallet' %}">
+                                    Wallet
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="itemsdiv mx-2 my-2">
-                        <li class="nav-item">
-                            <a class="nav-link navitem" href="{% url "my_orders" %}">
-                                My Orders
-                            </a>
-                        </li>
-                    </div>
-                    <div class="itemsdiv mx-2 my-2">
-                        <li class="nav-item">
-                            <a class="nav-link navitem" href="{% url 'wishlist_view' %}">
-                                Wishlist
-                            </a>
-                        </li>
-                    </div> 
-                    <div class="itemsdiv mx-2 my-2">
-                        <li class="nav-item">
-                            <a class="nav-link navitem" href="{% url 'user_wallet'%}">
-                                Wallet
-                            </a>
-                        </li>
-                    </div>
-                </ul>
+                </div>
             </div>
         </nav>
 
@@ -127,7 +123,7 @@
                             {% csrf_token %}
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" name="username"
+                                <input type="text" readonly class="form-control" id="username" name="username"
                                     value="{{user.username}}">
                             </div>
                             <div class="mb-3">
@@ -497,6 +493,7 @@
         </div>
     </div>
 </div>
+<div style="height: 100px; width: 100%; background-color: #f0f0f0;"></div>
 
 {% endblock %}
 {% block script %}

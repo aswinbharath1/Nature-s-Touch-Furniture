@@ -10,6 +10,7 @@ from xhtml2pdf import pisa
 import os
 from io import BytesIO
 from django.template.loader import get_template
+from store.models import Coupon
 # Create your views here.
 
 def UserProfile(request):
@@ -149,16 +150,9 @@ def MyOrders(request):
         user = CustomUser.objects.get(email=user_email)
         try:
             orders = Order.objects.filter(user=user)
-            # Paginate the orders
-            paginator = Paginator(orders, 10)  # Set the number of orders per page
-            page = request.GET.get('page', 1)
+            # order_items = OrderItem.objects.filter(order__in=orders).order_by('order').distinct('order')
+            order_items = OrderItem.objects.filter(order__in=orders).order_by('-order').distinct('order')
 
-            try:
-                orders = paginator.page(page)
-            except EmptyPage:
-                orders = paginator.page(paginator.num_pages)
-
-            order_items = OrderItem.objects.filter(order__in=orders).order_by('order').distinct('order')
         except:
             orders = None
             order_items = None
@@ -220,9 +214,15 @@ def RenderToPdf(template_src, context_dict={}):
 def PdfDownload(request,id):
     order=Order.objects.get(id=id)
     neworderitems=OrderItem.objects.filter(order=order)
+    try:
+        coupons = Coupon.objects.filter(coupon_name = order.coupon_applied)
+    except:
+        coupons = None
+        pass
     context = {
         'order': order,
-        'cart_items': neworderitems
+        'cart_items': neworderitems,
+        'coupons' : coupons,
     }
     pdf = RenderToPdf('userprofile/order_invoice.html', context)
     if pdf:
@@ -250,7 +250,9 @@ def OrderReturn(request,order_id):
 
 def UserWallets(request):
 
-    wallets=UserWallet.objects.filter(user=request.user)
+    wallets=UserWallet.objects.filter(user=request.user).order_by('created_at')
+    # order_items = OrderItem.objects.filter(order__in=orders).order_by('-order').distinct('order')
+
     if request.user:
         user =  request.user
         balance = user.wallet
