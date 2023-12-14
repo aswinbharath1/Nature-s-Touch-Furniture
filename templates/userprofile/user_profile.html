@@ -6,6 +6,8 @@
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+
 <link href="{% static 'css/userprofile/custom_styles.css' %}" rel="stylesheet">
 <link href="{% static 'css/userprofile/userprofile.css' %}" rel="stylesheet">
 {% endblock %}
@@ -154,75 +156,140 @@
                 </div>
 
                 <p class="card-text">
-                <form method="POST" action="{% url 'add_address' user_id=user.id %}">
-                    {% csrf_token %}
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="RecipientName" class="form-label">Recipient Name:</label>
-                                <input type="text" class="form-control" id="RecipientName" name="RecipientName" value="" required>
+                    <form method="POST" action="{% url 'add_address' user_id=user.id %}" onsubmit="return validateForm2()">
+                        {% csrf_token %}
+                    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="RecipientName" class="form-label">Recipient Name:</label>
+                                    <input type="text" class="form-control" id="RecipientName" name="RecipientName" value="" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="house_no" class="form-label">House No:</label>
+                                    <input type="text" class="form-control" id="house_no" name="house_no" value="" required>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="house_no" class="form-label">House No:</label>
-                                <input type="text" class="form-control" id="house_no" name="house_no" value="" required>
+                    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="street_name" class="form-label">Street Name:</label>
+                                    <input type="text" class="form-control" id="street_name" name="street_name" value="" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Village" class="form-label">Village/City:</label>
+                                    <input type="text" class="form-control" id="Village" name="Village" value="" required>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="street_name" class="form-label">Street Name:</label>
-                                <input type="text" class="form-control" id="street_name" name="street_name" value=""
-                                    required>
+                    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="postal_code" class="form-label">Postal Code:</label>
+                                    <input type="text" class="form-control" id="postal_code" name="postal_code" value="" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="district" class="form-label">District:</label>
+                                    <input type="text" class="form-control" id="district" name="district" value="" required>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="Village" class="form-label">Village/City:</label>
-                                <input type="text" class="form-control" id="Village" name="Village" value="" required>
+                    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="state" class="form-label">State:</label>
+                                    <input type="text" class="form-control" id="state" name="state" value="" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="country" class="form-label">Country:</label>
+                                    <input type="text" class="form-control" id="country" name="country" value="" required>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="postal_code" class="form-label">Postal Code:</label>
-                                <input type="text" class="form-control" id="postal_code" name="postal_code" value=""required>
-                            </div>
+                        <div class="d-flex justify-content-center col-lg-12 mt-2">
+                            <button type="submit" class="btn btn-primary">
+                                Save the Address
+                            </button>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="district" class="form-label">District:</label>
-                                <input type="text" class="form-control" id="district" name="district" value="" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="state" class="form-label">State:</label>
-                                <input type="text" class="form-control" id="state" name="state" value="" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="country" class="form-label">Country:</label>
-                                <input type="text" class="form-control" id="country" name="country" value="" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-center col-lg-12 mt-2">
-                        <button type="submit" class="btn btn-primary">
-                            Save the Address
-                        </button>
-                    </div>
-                </form>
+                    
+                        <script>
+                            function validateForm2() {
+                                // Recipient Name validation
+                                var recipientName = document.getElementById('RecipientName').value;
+                                if (recipientName.trim() === '') {
+                                    alert('Recipient Name cannot be empty.');
+                                    return false;
+                                }
+                    
+                                // House No validation
+                                var houseNo = document.getElementById('house_no').value;
+                                if (houseNo.trim() === '') {
+                                    alert('House No cannot be empty.');
+                                    return false;
+                                }
+                    
+                                // Street Name validation
+                                var streetName = document.getElementById('street_name').value;
+                                if (streetName.trim() === '') {
+                                    alert('Street Name cannot be empty.');
+                                    return false;
+                                }
+                    
+                                // Village/City validation
+                                var village = document.getElementById('Village').value;
+                                if (village.trim() === '') {
+                                    alert('Village/City cannot be empty.');
+                                    return false;
+                                }
+                    
+                                // Postal Code validation
+                                var postalCode = document.getElementById('postal_code').value;
+                                if (!/^\d{6}$/.test(postalCode)) {
+                                    alert('Postal Code is invalid. Enter a 6-digit number.');
+                                    return false;
+                                }
+                    
+                                // District validation
+                                var district = document.getElementById('district').value;
+                                if (district.trim() === '') {
+                                    alert('District cannot be empty.');
+                                    return false;
+                                }
+                    
+                                // State validation
+                                var state = document.getElementById('state').value;
+                                if (state.trim() === '') {
+                                    alert('State cannot be empty.');
+                                    return false;
+                                }
+                    
+                                // Country validation
+                                var country = document.getElementById('country').value;
+                                if (country.trim() === '') {
+                                    alert('Country cannot be empty.');
+                                    return false;
+                                }
+                    
+                                // Additional validations can be added as needed
+                    
+                                return true;
+                            }
+                        </script>
+                    </form>
+                    
+                    
 
             </div>
         </div>
@@ -232,7 +299,7 @@
         </div>
 
         <div class=" d-flex justify-content-center mt-4">
-            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#myModal">
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#defaultAddressModal">
                 Select default address
             </button>
         </div>
@@ -452,7 +519,7 @@
 </div>
 
 <!-- this modal is for selecting default address for user -->
-<div class="modal" id="myModal">
+<div class="modal" id="defaultAddressModal">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -474,9 +541,11 @@
                             <option selected disabled>Select an address</option>
 
                             {% for addres in address%}
-                            <option value="{{addres.id}}">
-                                {{addres.recipient_name}}/{{addres.house_no}}/{{addres.street_name}}/{{addres.village_name}}/{{addres.postal_code}}/{{addres.district}}/{{addres.state}}/{{addres.country}}
-                            </option>
+                                {% if addres.is_default == False %}
+                                    <option value="{{addres.id}}">
+                                        {{addres.recipient_name}}/{{addres.house_no}}/{{addres.street_name}}/{{addres.village_name}}/{{addres.postal_code}}/{{addres.district}}/{{addres.state}}/{{addres.country}}
+                                    </option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
@@ -497,10 +566,21 @@
 
 {% endblock %}
 {% block script %}
+
+
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#defaultAddressModal').modal();
+    });
+</script>
 <script>
     function capitalizeFirstLetter(inputElement) {
         inputElement.value = inputElement.value.trim().replace(/\b\w/g, function (match) {
@@ -545,6 +625,7 @@
         return true;
     }
     </script>
+    
     
     
 

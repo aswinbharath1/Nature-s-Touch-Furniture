@@ -511,27 +511,38 @@ def OrderStatus(request):
                 return redirect(url)
             order = Order.objects.get(id=order_id)
             order_item = OrderItem.objects.filter(order=order)
+            
             order.status = order_status
             order.save()
-            if order_status == 'Returned':
-                email = order.user.email
-                user = CustomUser.objects.get(email=email)
-                user.wallet = user.wallet + order.total_price
-                userwallet = UserWallet()
-                userwallet.user = user
-                userwallet.amount = order.total_price
-                userwallet.transaction = 'Credited'
-                userwallet.save()
-                user.save()
-                orderproduct = Variation.objects.filter(id=order.product.id).first()
-                orderproduct.stock = orderproduct.stock + order_item.quantity
-                orderproduct.save()
-            if order_status == 'Cancelled':
-            
-                orderproduct = Variation.objects.filter(id=order.product.id).first()
-                orderproduct.stock = orderproduct.stock + order_item.quantity
-                orderproduct.save()
-            
+            if order_status == 'Returned' or  order_status == 'Cancelled':
+                if order.payment_mode == "Paid by Razorpay" or order.payment_mode == "wallet":
+                    email = order.user.email
+                    user = CustomUser.objects.get(email=email)
+                    user.wallet = user.wallet + order.total_price
+                    userwallet = UserWallet()
+                    userwallet.user = user
+                    userwallet.amount = order.total_price
+                    userwallet.transaction = 'Credited'
+                    userwallet.save()
+                    user.save()
+                # for item in order_item:
+                   
+                #     variation_q = Variation.objects.get(product = item.variant)
+                #     print("===========================")
+                #     print("===========================")
+                #     print("===========================")
+                #     print(variation_q)
+                #     print(variation_q)
+                #     print(variation_q)
+                #     print(variation_q)
+                #     print("===========================")
+                #     print("===========================")
+                #     print("===========================")
+                #     variation_q.stock += item.quantity 
+                #     variation_q.save()    
+                    
+                order_item.save()
+                
             order_item = OrderItem.objects.filter(order=order)
             context = {
                 'order': order,
